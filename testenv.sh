@@ -5,14 +5,10 @@ toolname=autoconf
 set -e
 
 tmpenv=tmpenv
-tmpout=tmpout/host
 tmpmeta=tmpmeta
 
 rm -rf $tmpenv
 mkdir -p $tmpenv
-
-rm -rf $tmpout
-mkdir -p $tmpout
 
 rm -rf $tmpmeta
 mkdir -p $tmpmeta
@@ -37,6 +33,16 @@ copyit scripts
 # build hashes over $tmpenv before build (which marks all inputs)
 find $tmpenv -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/input.hashes
 cat $tmpmeta/input.hashes | md5sum - | awk '{print $1}' > $tmpmeta/input.hash
+inputhash=$(cat $tmpmeta/input.hash)
+
+tmpout=tmpout/$toolname-$inputhash/host
+#rm -rf $tmpout
+
+if [ -d $tmpout ]; then
+    echo "$tmpout already exists, remove it first if you want to rebuild."
+    exit 1
+fi
+mkdir -p $tmpout
 
 # build hashes over $tmpenv/staging_dir
 find $tmpenv/staging_dir -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/staging_dir_before.hash
