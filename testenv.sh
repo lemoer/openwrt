@@ -36,20 +36,24 @@ cat $tmpmeta/input.hashes | md5sum - | awk '{print $1}' > $tmpmeta/input.hash
 inputhash=$(cat $tmpmeta/input.hash)
 
 tmpout=tmpout/$toolname-$inputhash/host
-#rm -rf $tmpout
+tmpbuild=tmpbuild/$toolname-$inputhash/host
 
 if [ -d $tmpout ]; then
     echo "$tmpout already exists, remove it first if you want to rebuild."
     exit 1
 fi
-mkdir -p $tmpout
+mkdir -p $tmpbuild
 
 # build hashes over $tmpenv/staging_dir
 find $tmpenv/staging_dir -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/staging_dir_before.hash
 
 # HOST_BUILD_PREFIX sets where the tool is installed to.
 
-make V=s HOST_BUILD_PREFIX=$(pwd)/$tmpout TOPDIR=$(pwd)/tmpenv -j 1 -C tools/$toolname/ compile
+make V=s HOST_BUILD_PREFIX=$(pwd)/$tmpbuild TOPDIR=$(pwd)/tmpenv -j 1 -C tools/$toolname/ compile
+
+# To be atomic and make sure a build has really finished, we first build to $tmpbuild
+# and then move it to $tmpout.
+mv $tmpbuild $tmpout
 
 find $tmpout
 
