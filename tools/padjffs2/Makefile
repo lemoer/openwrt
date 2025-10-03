@@ -25,11 +25,11 @@ define Host/Configure
 endef
 
 define Host/Install
-	$(CP) $(HOST_BUILD_DIR)/padjffs2 $(STAGING_DIR_HOST)/bin/
+	$(CP) $(HOST_BUILD_DIR)/padjffs2 $(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/padjffs2
+	rm -f $(HOST_BUILD_PREFIX)/bin/padjffs2
 endef
 
 $(eval $(call HostBuild))
