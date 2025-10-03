@@ -1,6 +1,11 @@
 #!/bin/sh
 
-toolname=libdeflate
+#toolname=libdeflate
+#toolname=patch
+#toolname=tar
+#toolname=zstd
+#toolname=m4
+toolname=autoconf
 
 set -e
 
@@ -29,6 +34,12 @@ copy_staging_dir_fromtool() {
 # TODO: find out if CONFIG_... variables can leak in
 
 copy_staging_dir_fromtool 000-meta-prereq 8921fc20661dccd4747c9542b002aeca
+if [ $toolname = "patch" ] || [ $toolname = "tar" ] || [ $toolname = "zstd" ] || [ $toolname = "m4" ]; then
+    copy_staging_dir_fromtool libdeflate b4726be1a4b019490580d5e470d15986
+fi
+if [ $toolname = "autoconf" ]; then
+    copy_staging_dir_fromtool m4 f80176190dd11a05d2813204e880dffe
+fi
 
 #copyit staging_dir/host/bin/m4         # dependency of autoconf
 copyit include
