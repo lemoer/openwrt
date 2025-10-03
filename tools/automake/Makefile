@@ -34,6 +34,8 @@ define Host/Install
 	$(call Host/Compile/Default,install)
 	mv $(HOST_BUILD_PREFIX)/bin/aclocal $(HOST_BUILD_PREFIX)/bin/aclocal.real
 	$(INSTALL_BIN) ./files/aclocal $(HOST_BUILD_PREFIX)/bin
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/automake $(HOST_BUILD_PREFIX)/bin/automake
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/automake-* $(HOST_BUILD_PREFIX)/bin
 	( \
 		api=$(PKG_API_VERSION); \
 		while [ "$$$$api" -ge 11 ]; do \
