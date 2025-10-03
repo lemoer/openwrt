@@ -2,9 +2,33 @@
 
 set -e
 
+tmpenv=tmpenv
+tmpmetabasic=tmpmetabasic
+
+export tmpmetabasic=tmpmetabasic
+rm -rf $tmpmetabasic
+mkdir -p $tmpmetabasic
+
 export tmpassembly=tmpassembly
 rm -rf $tmpassembly
 mkdir -p $tmpassembly
+
+# some preparations
+
+rm -r $tmpenv
+mkdir -p $tmpenv
+
+copyit() {
+    destpath=$tmpenv/$(dirname $1)
+    mkdir -p $destpath
+    cp -r $1 $tmpenv/$1
+}
+
+copyit include
+copyit rules.mk
+copyit scripts
+
+find $tmpenv -type f -exec md5sum {} + | sort -k 2 > $tmpmetabasic/basic.hashes
 
 sh testprereq.sh
 sh testtool.sh libdeflate
