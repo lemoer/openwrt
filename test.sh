@@ -15,7 +15,7 @@ mkdir -p $tmpassembly
 
 # some preparations
 
-rm -r $tmpenv
+rm -rf $tmpenv
 mkdir -p $tmpenv
 
 copyit() {
