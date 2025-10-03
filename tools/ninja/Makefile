@@ -22,15 +22,15 @@ define Host/Configure
 endef
 
 define Host/Compile
-	+$(NINJA) -C $(HOST_BUILD_DIR)
+	+$(HOST_BUILD_PREFIX)/bin/ninja -C $(HOST_BUILD_DIR)
 endef
 
 define Host/Install
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/ninja $(STAGING_DIR_HOST)/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/ninja $(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/ninja
+	rm -f $(HOST_BUILD_PREFIX)/bin/ninja
 endef
 
 $(eval $(call HostBuild))
