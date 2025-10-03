@@ -4,6 +4,8 @@ toolname=$1
 
 set -e
 
+tmpassembly=tmpassembly
+tmpmetabasic=tmpmetabasic
 tmpenv=tmpenv
 tmpmeta=tmpmeta
 
