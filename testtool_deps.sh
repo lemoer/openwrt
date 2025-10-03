@@ -5,6 +5,13 @@ if [ $toolname != "libdeflate" ]; then
     add_dependency libdeflate
 fi
 
+uses_automake() {
+    add_dependency m4
+    add_dependency autoconf
+    add_dependency automake
+    add_dependency sed
+}
+
 # The following are the dependencies between tools, as far as I could
 # figure out.
 # For each dependency, call add_dependency with the dependency name.
@@ -13,7 +20,12 @@ case "$toolname" in
     autoconf)
         add_dependency m4
         ;;
+    autoconf-archive)
+        uses_automake
+        add_dependency missing-macros
+        ;;
     automake)
+        add_dependency sed
         add_dependency m4
         add_dependency autoconf
         add_dependency pkgconf
@@ -28,6 +40,8 @@ case "$toolname" in
         ;;
     bison)
         add_dependency flex
+        add_dependency missing-macros
+        uses_automake
         ;;
     bzip2)
         add_dependency cmake
@@ -44,22 +58,29 @@ case "$toolname" in
         add_dependency zstd
         ;;
     coreutils)
-        add_dependency automake
+        uses_automake
+        add_dependency missing-macros
         add_dependency bison
         add_dependency gnulib
         ;;
     dosfstools)
-        add_dependency automake
+        uses_automake
         ;;
     e2fsprogs)
+        uses_automake
+        add_dependency gnulib
         add_dependency libtool
         add_dependency util-linux
+        add_dependency pkgconf
+        add_dependency sed
         ;;
     elfutils)
+        uses_automake
+        add_dependency libtool
         add_dependency bison
         add_dependency gnulib
-        add_dependency m4
         add_dependency zlib
+        add_dependency zstd
         ;;
     erofs-utils)
         add_dependency libtool
@@ -72,26 +93,28 @@ case "$toolname" in
         ;;
     findutils)
         add_dependency bison
+        uses_automake
         ;;
     firmware-utils)
         add_dependency cmake
         ;;
     flex)
         add_dependency libtool
+        uses_automake
         ;;
     genext2fs)
         add_dependency libtool
+        uses_automake
         ;;
     gengetopt)
         add_dependency libtool
+        uses_automake
         ;;
     gmp)
         add_dependency libtool
         ;;
-    gnulib)
-        add_dependency libtool
-        ;;
     isl)
+        uses_automake
         add_dependency gmp
         ;;
     liblzo)
@@ -99,14 +122,17 @@ case "$toolname" in
         ;;
     libressl)
         add_dependency pkgconf
+        uses_automake
         ;;
     libtool)
-        add_dependency automake
+        uses_automake
         add_dependency gnulib
         add_dependency missing-macros
         ;;
     lz4)
         add_dependency meson
+        add_dependency sed
+        add_dependency ninja
         ;;
     lzma-old)
         add_dependency zlib
@@ -144,18 +170,22 @@ case "$toolname" in
         add_dependency gmp
         ;;
     mpfr)
+        uses_automake
         add_dependency gmp
         ;;
     mtd-utils)
+        uses_automake
         add_dependency libtool
         add_dependency zlib
         add_dependency util-linux
+        add_dependency pkgconf
         ;;
     padjffs2)
         add_dependency findutils
         ;;
     patchelf)
         add_dependency libtool
+        uses_automake
         ;;
     pkgconf)
         add_dependency ninja
@@ -163,11 +193,8 @@ case "$toolname" in
         add_dependency sed
         ;;
     quilt)
-        add_dependency autoconf
+        uses_automake
         add_dependency findutils
-        ;;
-    sdcc)
-        add_dependency bison
         ;;
     squashfs3-lzma)
         add_dependency lzma-old
@@ -177,8 +204,10 @@ case "$toolname" in
         add_dependency zlib
         ;;
     util-linux)
+        add_dependency meson
+        add_dependency ninja
+        add_dependency sed
         add_dependency bison
-        add_dependency automake
         ;;
     yafut)
         add_dependency cmake
