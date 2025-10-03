@@ -28,11 +28,11 @@ HOSTCC := $(HOSTCC_NOCACHE)
 HOST_CFLAGS += $(HOST_FPIC)
 
 HOST_CONFIGURE_ARGS = \
-	--prefix=$(STAGING_DIR_HOST) \
-	--sysconfdir=$(STAGING_DIR_HOST)/etc \
-	--localstatedir=$(STAGING_DIR_HOST)/var \
-	--libdir=$(STAGING_DIR_HOST)/lib \
-	--includedir=$(STAGING_DIR_HOST)/include \
+	--prefix=$(HOST_BUILD_PREFIX) \
+	--sysconfdir=$(HOST_BUILD_PREFIX)/etc \
+	--localstatedir=$(HOST_BUILD_PREFIX)/var \
+	--libdir=$(HOST_BUILD_PREFIX)/lib \
+	--includedir=$(HOST_BUILD_PREFIX)/include \
 	--static
 
 define Host/Uninstall
