@@ -20,16 +20,16 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(INSTALL_DIR) $(STAGING_DIR_HOST)/bin
-	$(HOST_BUILD_DIR)/packaging/create_zipapp.py $(HOST_BUILD_DIR) --outfile $(STAGING_DIR_HOST)/bin/meson.py
-	$(INSTALL_DIR) $(STAGING_DIR_HOST)/lib/meson
-	$(INSTALL_CONF) files/openwrt-cross.txt.in $(STAGING_DIR_HOST)/lib/meson/
-	$(INSTALL_CONF) files/openwrt-native.txt.in $(STAGING_DIR_HOST)/lib/meson/
+	$(INSTALL_DIR) $(HOST_BUILD_PREFIX)/bin
+	$(HOST_BUILD_DIR)/packaging/create_zipapp.py $(HOST_BUILD_DIR) --outfile $(HOST_BUILD_PREFIX)/bin/meson.py
+	$(INSTALL_DIR) $(HOST_BUILD_PREFIX)/lib/meson
+	$(INSTALL_CONF) files/openwrt-cross.txt.in $(HOST_BUILD_PREFIX)/lib/meson/
+	$(INSTALL_CONF) files/openwrt-native.txt.in $(HOST_BUILD_PREFIX)/lib/meson/
 endef
 
 define Host/Clean
 	$(call Host/Clean/Default)
-	rm -rf $(STAGING_DIR_HOST)/lib/meson
+	rm -rf $(HOST_BUILD_PREFIX)/lib/meson
 endef
 
 $(eval $(call HostBuild))
