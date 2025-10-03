@@ -28,12 +28,12 @@ MESON_HOST_ARGS += \
 
 define Host/Install
 	$(call Host/Install/Meson)
-	mv $(STAGING_DIR_HOST)/bin/pkgconf $(STAGING_DIR_HOST)/bin/pkg-config.real
-	$(INSTALL_BIN) ./files/pkg-config $(STAGING_DIR_HOST)/bin/pkg-config
+	cp $(HOST_BUILD_PREFIX)/bin/pkgconf $(HOST_BUILD_PREFIX)/bin/pkg-config.real
+	$(INSTALL_BIN) ./files/pkg-config $(HOST_BUILD_PREFIX)/bin/pkg-config
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/pkg-config.real $(STAGING_DIR_HOST)/bin/pkg-config
+	rm -f $(HOST_BUILD_PREFIX)/bin/pkg-config.real $(HOST_BUILD_PREFIX)/bin/pkg-config
 	$(call Host/Clean/Meson)
 endef
 
