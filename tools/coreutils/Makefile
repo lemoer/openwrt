@@ -70,8 +70,8 @@ define Host/Install
 	$(INSTALL_DIR) $(1)/bin
 	$(foreach prog,$(filter-out g%,$(PKG_PROGRAMS)),$(INSTALL_BIN) $(patsubst %,$(HOST_BUILD_DIR)/src/%,$(prog)) $(1)/bin/g$(prog); )
 	$(foreach prog,$(filter g%,$(PKG_PROGRAMS)),$(INSTALL_BIN) $(patsubst %,$(HOST_BUILD_DIR)/src/%,$(prog)) $(1)/bin/$(prog); )
-	$(foreach prog,$(filter-out g%,$(PKG_PROGRAMS)),g$(LN) g$(prog) $(1)/bin/$(prog); )
-	$(foreach prog,$(filter g%,$(PKG_PROGRAMS)),g$(LN) $(prog) $(1)/bin/$(patsubst g%,%,$(prog)); )
+	$(foreach prog,$(filter-out g%,$(PKG_PROGRAMS)),$(1)/bin/g$(LN) g$(prog) $(1)/bin/$(prog); )
+	$(foreach prog,$(filter g%,$(PKG_PROGRAMS)),$(1)/bin/g$(LN) $(prog) $(1)/bin/$(patsubst g%,%,$(prog)); )
 endef
 
 define Host/Uninstall
