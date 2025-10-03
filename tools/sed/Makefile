@@ -40,11 +40,11 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/sed/sed $(STAGING_DIR_HOST)/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/sed/sed $(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/sed
+	rm -f $(HOST_BUILD_PREFIX)/bin/sed
 endef
 
 $(eval $(call HostBuild))
