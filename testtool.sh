@@ -22,7 +22,10 @@ copyit() {
 
 add_dependency() {
     #echo "$toolname: Adding dependency $1"
-    cat tmpassembly/$1/.meta/output.hashes >> $prefile
+    cat tmpassembly/$1/.meta/output.hashes 2>/dev/null >> $prefile || {
+        echo "$toolname: Dependency $1 not found in tmpassembly! Did you forget to build it first?"
+        exit 1
+    }
 }
 
 prefile=$tmpmeta/input.hashes.pre
@@ -68,7 +71,7 @@ cat $tmpmeta/input.hashes | md5sum - | awk '{print $1}' > $tmpmeta/input.hash
 inputhash=$(cat $tmpmeta/input.hash)
 
 diff -q $tmpmeta/input.hashes.pre $tmpmeta/input.hashes || {
-    echo "Input hashes changed between pre and actual build! This should not happen."
+    echo "$toolname: Input hashes changed between pre and actual build! This should not happen."
     diff --color=auto -u $tmpmeta/input.hashes.pre $tmpmeta/input.hashes || true
     exit 1
 }
