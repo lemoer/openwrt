@@ -32,12 +32,12 @@ define Host/Install
 	# remove old automake resources to avoid version conflicts
 	$(call Host/Uninstall)
 	$(call Host/Compile/Default,install)
-	mv $(STAGING_DIR_HOST)/bin/aclocal $(STAGING_DIR_HOST)/bin/aclocal.real
-	$(INSTALL_BIN) ./files/aclocal $(STAGING_DIR_HOST)/bin
+	mv $(HOST_BUILD_PREFIX)/bin/aclocal $(HOST_BUILD_PREFIX)/bin/aclocal.real
+	$(INSTALL_BIN) ./files/aclocal $(HOST_BUILD_PREFIX)/bin
 	( \
 		api=$(PKG_API_VERSION); \
 		while [ "$$$$api" -ge 11 ]; do \
-			ln -sf aclocal "$(STAGING_DIR_HOST)/bin/aclocal-1.$$$$api"; \
+			ln -sf aclocal "$(HOST_BUILD_PREFIX)/bin/aclocal-1.$$$$api"; \
 			api=$$$$(($$$$api - 1)); \
 		done; \
 	)
@@ -45,8 +45,9 @@ endef
 
 define Host/Uninstall
 	-$(call Host/Compile/Default,uninstall)
-	rm -rf $(STAGING_DIR_HOST)/share/aclocal-[0-9]*
-	rm -rf $(STAGING_DIR_HOST)/share/automake-[0-9]*
+	rm -rf $(HOST_BUILD_PREFIX)/share/aclocal-[0-9]*
+	rm -rf $(HOST_BUILD_PREFIX)/share/automake-[0-9]*
+	rm -f $(HOST_BUILD_PREFIX)/bin/aclocal.real
 endef
 
 $(eval $(call HostBuild))
