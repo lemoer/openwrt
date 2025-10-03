@@ -101,7 +101,7 @@ cmp -s $tmpmeta/staging_dir_before.hash $tmpmeta/staging_dir_after.hash || {
 # To be atomic and make sure a build has really finished, we first build to $tmpbuild
 # and then move it to $tmpout.
 mkdir -p $(dirname $tmpout)
-mv $tmpbuild $tmpout
+ln -s ../../$tmpbuild/ $tmpout
 
 # Generate output hashes
 find $tmpout/ -type f | xargs -r md5sum | sed "s|$tmpout/|$tmpenv/staging_dir/|" | sort -k 2 > $tmpmeta/output.hashes
