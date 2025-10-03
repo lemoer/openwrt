@@ -36,13 +36,13 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/squashfs-tools/mksquashfs $(STAGING_DIR_HOST)/bin/mksquashfs4
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/squashfs-tools/unsquashfs $(STAGING_DIR_HOST)/bin/unsquashfs4
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/squashfs-tools/mksquashfs $(HOST_BUILD_PREFIX)/bin/mksquashfs4
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/squashfs-tools/unsquashfs $(HOST_BUILD_PREFIX)/bin/unsquashfs4
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/mksquashfs4
-	rm -f $(STAGING_DIR_HOST)/bin/unsquashfs4
+	rm -f $(HOST_BUILD_PREFIX)/bin/mksquashfs4
+	rm -f $(HOST_BUILD_PREFIX)/bin/unsquashfs4
 endef
 
 $(eval $(call HostBuild))
