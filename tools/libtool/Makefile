@@ -52,13 +52,13 @@ endef
 
 define Host/Install
 	$(call Host/Compile/Default,install)
-	$(SED) 's,\(hardcode_into_libs\)=yes,\1=no,g' $(STAGING_DIR_HOST)/bin/libtool
+	$(SED) 's,\(hardcode_into_libs\)=yes,\1=no,g' $(HOST_BUILD_PREFIX)/bin/libtool
 endef
 
 define Host/Uninstall
 	-$(call Host/Compile/Default,uninstall)
 	-$(call Host/Compile/Default,maintainer-clean) # Clean bootstrap files from the release
-	(cd $(STAGING_DIR_HOST)/share/aclocal/ && rm -f libtool.m4 ltdl.m4 lt~obsolete.m4 ltoptions.m4 ltsugar.m4 ltversion.m4)
+	(if test -d $(HOST_BUILD_PREFIX)/share/aclocal/; then rm -f $(HOST_BUILD_PREFIX)/share/aclocal/libtool.m4 $(HOST_BUILD_PREFIX)/share/aclocal/ltdl.m4 $(HOST_BUILD_PREFIX)/share/aclocal/lt~obsolete.m4 $(HOST_BUILD_PREFIX)/share/aclocal/ltoptions.m4 $(HOST_BUILD_PREFIX)/share/aclocal/ltsugar.m4 $(HOST_BUILD_PREFIX)/share/aclocal/ltversion.m4; fi)
 endef
 
 $(eval $(call HostBuild))
