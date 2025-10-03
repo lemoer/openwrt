@@ -26,13 +26,13 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/libdeflate-gzip $(STAGING_DIR_HOST)/bin/
-	$(LN) libdeflate-gzip $(STAGING_DIR_HOST)/bin/libdeflate-gunzip
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/libdeflate-gzip $(HOST_BUILD_PREFIX)/bin/
+	$(LN) libdeflate-gzip $(HOST_BUILD_PREFIX)/bin/libdeflate-gunzip
 endef
 
 define Host/Uninstall
-	$(RM) $(STAGING_DIR_HOST)/bin/libdeflate-gzip
-	$(RM) $(STAGING_DIR_HOST)/bin/libdeflate-gunzip
+	$(RM) $(HOST_BUILD_PREFIX)/bin/libdeflate-gzip
+	$(RM) $(HOST_BUILD_PREFIX)/bin/libdeflate-gunzip
 	$(call Host/Uninstall/Default)
 endef
 
