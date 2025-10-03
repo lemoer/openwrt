@@ -88,7 +88,7 @@ find $tmpenv/staging_dir -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/stagin
 
 # HOST_BUILD_PREFIX sets where the tool is installed to.
 
-make V=s HOST_OS=Linux PATH=$PATH:$(pwd)/tmpenv/staging_dir/host/bin HOST_FIXUP=libtool HOST_BUILD_PREFIX=$(pwd)/$tmpbuild/host TOPDIR=$(pwd)/tmpenv -j 1 -C tools/$toolname/ compile
+make V=s HOST_OS=Linux PATH=$PATH:$(pwd)/tmpenv/staging_dir/host/bin HOST_BUILD_PREFIX=$(pwd)/$tmpbuild/host TOPDIR=$(pwd)/tmpenv -j 1 -C tools/$toolname/ compile
 
 # Build hashes over $tmpenv/staging_dir again and check that
 # they are unchanged.
