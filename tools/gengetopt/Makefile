@@ -24,11 +24,11 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/src/gengetopt $(STAGING_DIR_HOST)/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/src/gengetopt $(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/gengetopt
+	rm -f $(HOST_BUILD_PREFIX)/bin/gengetopt
 endef
 
 $(eval $(call HostBuild))
