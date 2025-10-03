@@ -130,6 +130,7 @@ endef
 
 define Host/Install/Default
   $(call Host/Compile/Default,$(if $(PKG_SUBDIRS),SUBDIRS='$$$$(wildcard $(PKG_SUBDIRS))') install)
+	rm -f $(HOST_BUILD_PREFIX)/share/info/dir
 endef
 
 define Host/Install
