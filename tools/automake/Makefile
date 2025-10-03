@@ -31,7 +31,7 @@ endef
 define Host/Install
 	# remove old automake resources to avoid version conflicts
 	$(call Host/Uninstall)
-	$(call Host/Compile/Default,install)
+	$(call Host/Install/Default)
 	mv $(HOST_BUILD_PREFIX)/bin/aclocal $(HOST_BUILD_PREFIX)/bin/aclocal.real
 	$(INSTALL_BIN) ./files/aclocal $(HOST_BUILD_PREFIX)/bin
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/automake $(HOST_BUILD_PREFIX)/bin/automake
