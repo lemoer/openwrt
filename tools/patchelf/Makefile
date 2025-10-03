@@ -19,12 +19,12 @@ HOST_FIXUP:=autoreconf
 include $(INCLUDE_DIR)/host-build.mk
 
 define Host/Install
-	$(INSTALL_DIR) $(STAGING_DIR_HOST)/bin
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/src/patchelf $(STAGING_DIR_HOST)/bin/patchelf
+	$(INSTALL_DIR) $(HOST_BUILD_PREFIX)/bin
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/src/patchelf $(HOST_BUILD_PREFIX)/bin/patchelf
 endef
 
 define Host/Clean
-	rm -rf $(STAGING_DIR_HOST)/bin/patchelf
+	rm -rf $(HOST_BUILD_PREFIX)/bin/patchelf
 endef
 
 $(eval $(call HostBuild))
