@@ -18,11 +18,11 @@ PKG_MIRROR_HASH:=4fc8c5c2a550a3978648411d4bff83730c580b6e54194826461830299b21b68
 include $(INCLUDE_DIR)/host-build.mk
 
 define Host/Install
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/make_ext4fs $(STAGING_DIR_HOST)/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/make_ext4fs $(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/make_ext4fs
+	rm -f $(HOST_BUILD_PREFIX)/bin/make_ext4fs
 endef
 
 $(eval $(call HostBuild))
