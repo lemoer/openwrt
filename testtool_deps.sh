@@ -14,6 +14,7 @@ case "$toolname" in
         add_dependency m4
         ;;
     automake)
+        add_dependency m4
         add_dependency autoconf
         add_dependency pkgconf
         add_dependency xz
@@ -87,6 +88,9 @@ case "$toolname" in
     gmp)
         add_dependency libtool
         ;;
+    gnulib)
+        add_dependency libtool
+        ;;
     isl)
         add_dependency gmp
         ;;
@@ -154,7 +158,9 @@ case "$toolname" in
         add_dependency libtool
         ;;
     pkgconf)
+        add_dependency ninja
         add_dependency meson
+        add_dependency sed
         ;;
     quilt)
         add_dependency autoconf
