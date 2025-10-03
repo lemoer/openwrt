@@ -22,11 +22,11 @@ HOST_CONFIGURE_ARGS += --enable-threads=posix --disable-nls
 
 define Host/Install
 	$(call Host/Compile/Default,install aclocal_DATA=) # Macro provided by gnulib
-	$(INSTALL_BIN) ./scripts/yacc $(STAGING_DIR_HOST)/bin/yacc
+	$(INSTALL_BIN) ./scripts/yacc $(HOST_BUILD_PREFIX)/bin/yacc
 endef
 
 define Host/Uninstall
-	rm -f $(STAGING_DIR_HOST)/bin/yacc
+	rm -f $(HOST_BUILD_PREFIX)/bin/yacc
 	-$(call Host/Compile/Default,uninstall aclocal_DATA=) # Macro provided by gnulib
 endef
 
