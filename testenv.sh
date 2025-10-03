@@ -1,6 +1,6 @@
 #!/bin/sh
 
-toolname=autoconf
+toolname=libdeflate
 
 set -e
 
@@ -9,6 +9,7 @@ tmpmeta=tmpmeta
 
 rm -rf $tmpenv
 mkdir -p $tmpenv
+mkdir -p $tmpenv/tmp
 
 rm -rf $tmpmeta
 mkdir -p $tmpmeta
@@ -19,12 +20,17 @@ copyit() {
     cp -r $1 $tmpenv/$1
 }
 
+copy_staging_dir_fromtool() {
+    destpath=$tmpenv/staging_dir
+    mkdir -p $destpath
+    cp -r tmpout/$1-$2/* $destpath
+}
+
 # TODO: find out if CONFIG_... variables can leak in
 
-copyit staging_dir/host/bin/mkhash     # from prereq-build.mk
-copyit staging_dir/host/bin/xxd        # from prereq-build.mk
+copy_staging_dir_fromtool 000-meta-prereq 8921fc20661dccd4747c9542b002aeca
 
-copyit staging_dir/host/bin/m4         # dependency of autoconf
+#copyit staging_dir/host/bin/m4         # dependency of autoconf
 copyit include
 copyit rules.mk
 copyit tools/$toolname
@@ -42,7 +48,7 @@ if [ -d $tmpout ]; then
     echo "$tmpout already exists, remove it first if you want to rebuild."
     exit 1
 fi
-mkdir -p $tmpbuild
+mkdir -p $tmpbuild/bin
 
 # build hashes over $tmpenv/staging_dir
 find $tmpenv/staging_dir -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/staging_dir_before.hash
@@ -53,6 +59,7 @@ make V=s HOST_BUILD_PREFIX=$(pwd)/$tmpbuild TOPDIR=$(pwd)/tmpenv -j 1 -C tools/$
 
 # To be atomic and make sure a build has really finished, we first build to $tmpbuild
 # and then move it to $tmpout.
+mkdir -p $(dirname $tmpout)
 mv $tmpbuild $tmpout
 
 find $tmpout
