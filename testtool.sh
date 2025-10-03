@@ -55,7 +55,7 @@ fi
 add_dependency() {
     destpath=$tmpenv/staging_dir
     mkdir -p $destpath
-    cp -r $tmpassembly/$1/* $destpath
+    cp --remove-destination -r $tmpassembly/$1/* $destpath
 }
 
 # TODO: find out if CONFIG_... variables can leak in
