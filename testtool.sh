@@ -23,20 +23,19 @@ copyit() {
 copy_staging_dir_fromtool() {
     destpath=$tmpenv/staging_dir
     mkdir -p $destpath
-    cp -r tmpout/$1-$2/* $destpath
+    cp -r $tmpassembly/$1/* $destpath
 }
 
 # TODO: find out if CONFIG_... variables can leak in
 
-copy_staging_dir_fromtool 000-meta-prereq 8921fc20661dccd4747c9542b002aeca
+copy_staging_dir_fromtool 000-meta-prereq
 if [ $toolname = "patch" ] || [ $toolname = "tar" ] || [ $toolname = "zstd" ] || [ $toolname = "m4" ]; then
-    copy_staging_dir_fromtool libdeflate b4726be1a4b019490580d5e470d15986
+    copy_staging_dir_fromtool libdeflate
 fi
 if [ $toolname = "autoconf" ]; then
-    copy_staging_dir_fromtool m4 f80176190dd11a05d2813204e880dffe
+    copy_staging_dir_fromtool m4
 fi
 
-#copyit staging_dir/host/bin/m4         # dependency of autoconf
 copyit include
 copyit rules.mk
 copyit tools/$toolname
@@ -47,11 +46,12 @@ find $tmpenv -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/input.hashes
 cat $tmpmeta/input.hashes | md5sum - | awk '{print $1}' > $tmpmeta/input.hash
 inputhash=$(cat $tmpmeta/input.hash)
 
-tmpout=tmpout/$toolname-$inputhash/host
-tmpbuild=tmpbuild/$toolname-$inputhash/host
+tmpout=tmpout/$toolname/$inputhash/host
+tmpbuild=tmpbuild/$toolname/$inputhash/host
 
 if [ -d $tmpout ]; then
-    echo "skipping, $tmpout already exists."
+    echo "reusing $tmpout, since it already exists."
+    ln -s ../tmpout/$toolname/$inputhash $tmpassembly/$toolname
     exit 1
 fi
 mkdir -p $tmpbuild/bin
@@ -67,6 +67,8 @@ make V=s HOST_BUILD_PREFIX=$(pwd)/$tmpbuild TOPDIR=$(pwd)/tmpenv -j 1 -C tools/$
 # and then move it to $tmpout.
 mkdir -p $(dirname $tmpout)
 mv $tmpbuild $tmpout
+
+ln -s ../tmpout/$toolname/$inputhash $tmpassembly/$toolname
 
 find $tmpout
 

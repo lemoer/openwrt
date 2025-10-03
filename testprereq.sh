@@ -32,10 +32,11 @@ find $tmpenv -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/input.hashes
 cat $tmpmeta/input.hashes | md5sum - | awk '{print $1}' > $tmpmeta/input.hash
 inputhash=$(cat $tmpmeta/input.hash)
 
-tmpout=tmpout/$toolname-$inputhash/host
+tmpout=tmpout/$toolname/$inputhash/host
 
 if [ -d $tmpout ]; then
-    echo "$tmpout already exists, remove it first if you want to rebuild."
+    echo "reusing $tmpout, since it already exists."
+    ln -s ../tmpout/$toolname/$inputhash $tmpassembly/$toolname
     exit 1
 fi
 
@@ -46,5 +47,7 @@ mkdir -p $(dirname $tmpout)
 # To be atomic and make sure a build has really finished, we first build to $tmpbuild
 # and then move it to $tmpout.
 mv $(pwd)/tmpenv/staging_dir/host/ $tmpout
+
+ln -s ../tmpout/$toolname/$inputhash $tmpassembly/$toolname
 
 find $tmpout
