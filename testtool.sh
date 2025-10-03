@@ -235,15 +235,6 @@ find $tmpenv/staging_dir -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/stagin
 
 make V=s HOST_BUILD_PREFIX=$(pwd)/$tmpbuild/host TOPDIR=$(pwd)/tmpenv -j 1 -C tools/$toolname/ compile
 
-# To be atomic and make sure a build has really finished, we first build to $tmpbuild
-# and then move it to $tmpout.
-mkdir -p $(dirname $tmpout)
-mv $tmpbuild $tmpout
-
-ln -s ../$tmpout $tmpassembly/$toolname
-
-find $tmpout
-
 # Build hashes over $tmpenv/staging_dir again and check that
 # they are unchanged.
 find $tmpenv/staging_dir -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/staging_dir_after.hash
@@ -253,3 +244,12 @@ cmp -s $tmpmeta/staging_dir_before.hash $tmpmeta/staging_dir_after.hash || {
     echo "\nERROR: staging_dir changed by build! This should not happen. See diff above."
     exit 1
 }
+
+# To be atomic and make sure a build has really finished, we first build to $tmpbuild
+# and then move it to $tmpout.
+mkdir -p $(dirname $tmpout)
+mv $tmpbuild $tmpout
+
+ln -s ../$tmpout $tmpassembly/$toolname
+
+find $tmpout
