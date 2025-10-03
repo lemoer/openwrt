@@ -45,11 +45,11 @@ define Host/Install
 		$(HOST_BUILD_DIR)/mkfs.jffs2 \
 		$(HOST_BUILD_DIR)/mkfs.ubifs \
 		$(HOST_BUILD_DIR)/ubinize \
-		$(STAGING_DIR_HOST)/bin/
+		$(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/{mkfs.jffs2,mkfs.ubifs,ubinize}
+	rm -f $(HOST_BUILD_PREFIX)/bin/{mkfs.jffs2,mkfs.ubifs,ubinize}
 endef
 
 $(eval $(call HostBuild))
