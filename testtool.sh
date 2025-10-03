@@ -46,29 +46,29 @@ find $tmpenv -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/input.hashes
 cat $tmpmeta/input.hashes | md5sum - | awk '{print $1}' > $tmpmeta/input.hash
 inputhash=$(cat $tmpmeta/input.hash)
 
-tmpout=tmpout/$toolname/$inputhash/host
-tmpbuild=tmpbuild/$toolname/$inputhash/host
+tmpout=tmpout/$toolname/$inputhash
+tmpbuild=tmpbuild/$toolname/$inputhash
 
 if [ -d $tmpout ]; then
     echo "reusing $tmpout, since it already exists."
-    ln -s ../tmpout/$toolname/$inputhash $tmpassembly/$toolname
+    ln -s ../$tmpout $tmpassembly/$toolname
     exit 1
 fi
-mkdir -p $tmpbuild/bin
+mkdir -p $tmpbuild/host/bin # some packages seem to require this
 
 # build hashes over $tmpenv/staging_dir
 find $tmpenv/staging_dir -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/staging_dir_before.hash
 
 # HOST_BUILD_PREFIX sets where the tool is installed to.
 
-make V=s HOST_BUILD_PREFIX=$(pwd)/$tmpbuild TOPDIR=$(pwd)/tmpenv -j 1 -C tools/$toolname/ compile
+make V=s HOST_BUILD_PREFIX=$(pwd)/$tmpbuild/host TOPDIR=$(pwd)/tmpenv -j 1 -C tools/$toolname/ compile
 
 # To be atomic and make sure a build has really finished, we first build to $tmpbuild
 # and then move it to $tmpout.
 mkdir -p $(dirname $tmpout)
 mv $tmpbuild $tmpout
 
-ln -s ../tmpout/$toolname/$inputhash $tmpassembly/$toolname
+ln -s ../$tmpout $tmpassembly/$toolname
 
 find $tmpout
 
