@@ -1,11 +1,6 @@
 #!/bin/sh
 
-#toolname=libdeflate
-#toolname=patch
-#toolname=tar
-#toolname=zstd
-#toolname=m4
-toolname=autoconf
+toolname=$1
 
 set -e
 
@@ -56,7 +51,7 @@ tmpout=tmpout/$toolname-$inputhash/host
 tmpbuild=tmpbuild/$toolname-$inputhash/host
 
 if [ -d $tmpout ]; then
-    echo "$tmpout already exists, remove it first if you want to rebuild."
+    echo "skipping, $tmpout already exists."
     exit 1
 fi
 mkdir -p $tmpbuild/bin
