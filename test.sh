@@ -13,3 +13,5 @@ sh testtool.sh tar
 sh testtool.sh zstd
 sh testtool.sh m4
 sh testtool.sh autoconf
+sh testtool.sh ninja
+sh testtool.sh meson
