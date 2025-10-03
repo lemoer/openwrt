@@ -52,7 +52,7 @@ tmpbuild=tmpbuild/$toolname/$inputhash
 if [ -d $tmpout ]; then
     echo "reusing $tmpout, since it already exists."
     ln -s ../$tmpout $tmpassembly/$toolname
-    exit 1
+    exit 0
 fi
 mkdir -p $tmpbuild/host/bin # some packages seem to require this
 

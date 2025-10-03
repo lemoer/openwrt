@@ -37,7 +37,7 @@ tmpout=tmpout/$toolname/$inputhash/host
 if [ -d $tmpout ]; then
     echo "reusing $tmpout, since it already exists."
     ln -s ../tmpout/$toolname/$inputhash $tmpassembly/$toolname
-    exit 1
+    exit 0
 fi
 
 make V=s TOPDIR=$(pwd)/tmpenv $(pwd)/tmpenv/staging_dir/host/.prereq-build -C $(pwd)/tmpenv
