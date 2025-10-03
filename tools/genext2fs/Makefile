@@ -48,11 +48,11 @@ define Host/Compile
 endef
 
 define Host/Install
-	install -m0755 $(HOST_BUILD_DIR)/genext2fs $(STAGING_DIR_HOST)/bin/
+	install -m0755 $(HOST_BUILD_DIR)/genext2fs $(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/genext2fs
+	rm -f $(HOST_BUILD_PREFIX)/bin/genext2fs
 endef
 
 $(eval $(call HostBuild))
