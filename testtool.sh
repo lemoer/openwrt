@@ -37,7 +37,7 @@ cat $tmpmetabasic/basic.hashes > $prefile
 
 find tools/$toolname -type f -exec md5sum {} + | sort -k 2 | sed "s| tools/| $tmpenv/tools/|" >> $prefile
 
-sort -k 2 $prefile -o $prefile
+sort -u -k 2 $prefile -o $prefile
 
 ## try to use cached package
 
