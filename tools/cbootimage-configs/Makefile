@@ -20,13 +20,13 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(INSTALL_DIR) $(STAGING_DIR_HOST)/share/$(PKG_NAME)
+	$(INSTALL_DIR) $(HOST_BUILD_PREFIX)/share/$(PKG_NAME)
 	$(CP) $(HOST_BUILD_DIR)/* \
-		$(STAGING_DIR_HOST)/share/$(PKG_NAME)
+		$(HOST_BUILD_PREFIX)/share/$(PKG_NAME)
 endef
 
 define Host/Clean
-	rm -fR $(STAGING_DIR_HOST)/share/$(PKG_NAME)
+	rm -fR $(HOST_BUILD_PREFIX)/share/$(PKG_NAME)
 endef
 
 $(eval $(call HostBuild))
