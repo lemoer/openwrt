@@ -41,6 +41,7 @@ git-src
 /tmpmeta
 /tmpfinished
 /tmpmetabasic
+/tmpcmp.diff
 build.ninja
 .ninja_lock
 .ninja_log
