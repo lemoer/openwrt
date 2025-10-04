@@ -88,7 +88,39 @@ find $tmpenv/staging_dir -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/stagin
 
 # HOST_BUILD_PREFIX sets where the tool is installed to.
 
-make V=s HOST_OS=Linux PATH=$PATH:$(pwd)/tmpenv/staging_dir/host/bin HOST_BUILD_PREFIX=$(pwd)/$tmpbuild/host TOPDIR=$(pwd)/tmpenv -j 1 -C tools/$toolname/ compile
+isolate=0
+usepath=$PATH:$tmpenv/staging_dir/host/bin
+if [ "$isolate" -eq 1 ]; then
+    # Isolate build from host tools as much as possible
+    usepath=$tmpenv/staging_dir/host/bin
+    ln -s /bin/rm $tmpenv/staging_dir/host/bin/rm
+    ln -s /bin/mkdir $tmpenv/staging_dir/host/bin/mkdir
+    ln -s /bin/sort $tmpenv/staging_dir/host/bin/sort
+    ln -s /bin/cat $tmpenv/staging_dir/host/bin/cat
+    ln -s /bin/ls $tmpenv/staging_dir/host/bin/ls
+    ln -s /bin/wc $tmpenv/staging_dir/host/bin/wc
+    ln -s /bin/touch $tmpenv/staging_dir/host/bin/touch
+    ln -s /bin/chmod $tmpenv/staging_dir/host/bin/chmod
+    ln -s /bin/expr $tmpenv/staging_dir/host/bin/expr
+    ln -s /bin/date $tmpenv/staging_dir/host/bin/date
+    ln -s /bin/ln $tmpenv/staging_dir/host/bin/ln
+    ln -s /bin/sh $tmpenv/staging_dir/host/bin/sh
+    ln -s /bin/hostinfo $tmpenv/staging_dir/host/bin/hostinfo
+    ln -s /bin/uname $tmpenv/staging_dir/host/bin/uname
+    ln -s /bin/cut $tmpenv/staging_dir/host/bin/cut
+    ln -s /bin/echo $tmpenv/staging_dir/host/bin/echo
+    ln -s /bin/as $tmpenv/staging_dir/host/bin/as
+    ln -s /bin/ld $tmpenv/staging_dir/host/bin/ld
+    ln -s /bin/mv $tmpenv/staging_dir/host/bin/mv
+    ln -s /usr/bin/ar $tmpenv/staging_dir/host/bin/ar
+    ln -s /usr/bin/env $tmpenv/staging_dir/host/bin/env
+    ln -s /usr/bin/make $tmpenv/staging_dir/host/bin/make
+    ln -s /usr/bin/od $tmpenv/staging_dir/host/bin/od
+    ln -s /usr/bin/tr $tmpenv/staging_dir/host/bin/tr
+fi
+
+
+env -i make -j 1 V=s HOST_OS=Linux PATH=$PATH:$(pwd)/tmpenv/staging_dir/host/bin HOST_BUILD_PREFIX=$(pwd)/$tmpbuild/host TOPDIR=$(pwd)/tmpenv -C tools/$toolname/ compile
 
 # Build hashes over $tmpenv/staging_dir again and check that
 # they are unchanged.
