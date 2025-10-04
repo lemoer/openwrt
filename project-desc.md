@@ -63,14 +63,52 @@ The following folders and variables are used during the build:
     - The proposed approach tries to reduce the number of passed envionment variables to a minimum.
     - Furthermore, since I did not use Makefiles, I hope that it enhances the complexity.
 
-## Shortcomings
+## Speedup Of A Chached Build
 
-- So far, I do not respect the `CONFIG_*` variables from .config.
-    - However, this currently only affects which tools are build, e.g. by `CONFIG_BUILD_ALL_HOST_TOOLS`, `BUILD_BZIP2_TOOLS`, ...
-    - The tools themselves do not depend on these variables.
-- Single-threaded build:
-    - Since I am currently using just a shell script, everything is single-threaded.
-    - However, this is just a proof-of-concept and the concept is not tied to using shell scripts.
+In this section, we compare the build times when actually nothing has to be rebuilt between standard OpenWrt makefile and our approach.
+This comparison is not 100% fair so far, since (I think) OpenWrt makefiles do some additional steps before.
+
+### Single-Threaded 
+
+**Standard OpenWrt-Build Process:**
+```
+lemoer@luna ~/g/f/openwrt (experimental-tools-build)> time make tools/compile
+[...]
+________________________________________________________
+Executed in   14.74 secs    fish           external
+   usr time    9.85 secs    0.43 millis    9.85 secs
+   sys time    5.95 secs    1.16 millis    5.95 secs
+```
+
+**Our Approach:**
+```
+lemoer@luna ~/g/f/openwrt (experimental-tools-build)> time bash -c 'python testninja.py; ninja -j 1'
+[...]
+________________________________________________________
+Executed in    1.69 secs    fish           external
+   usr time    0.80 secs    0.54 millis    0.80 secs
+   sys time    1.14 secs    1.11 millis    1.13 secs
+```
+
+## Multi-Threaded
+
+**Standard OpenWrt-Build Process:**
+```
+lemoer@luna ~/g/f/openwrt (experimental-tools-build)> time make tools/compile -j 12
+________________________________________________________
+Executed in   10.38 secs    fish           external
+   usr time    9.31 secs    0.00 millis    9.31 secs
+   sys time    5.04 secs    1.04 millis    5.04 secs
+```
+
+**Our Approach:**
+```
+lemoer@luna ~/g/f/openwrt (experimental-tools-build)> time bash -c 'python testninja.py; ninja -j 12'
+________________________________________________________
+Executed in  380.71 millis    fish           external
+   usr time  733.18 millis    0.00 millis  733.18 millis
+   sys time  594.56 millis    1.02 millis  593.54 millis
+```
 
 # Next-Steps/Ideas
 
@@ -83,3 +121,9 @@ The following folders and variables are used during the build:
 
 - Use a common download dir.
 - Recreate basic hash in python-style based approach.
+    - After this, delete test.sh.
+- Store tool dependencies only in one place.
+- Update project-desc.md:
+    - Mention python based approach.
+    - New build dependency ninja.
+    - Mention how-to-setup.
