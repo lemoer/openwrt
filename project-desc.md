@@ -26,17 +26,17 @@ The following folders and variables are used during the build:
     - This folder is used as destination/output dir to install things to.
     - This is done via setting `HOST_BUILD_PREFIX=$(pwd)/tmpbuild/$toolname/$inputhash/` for the OpenWrt build.
 4. Now, the build of the tool is triggered.
-5. `tmpout/$toolname/$inputhash/`:
+5. `tmpfinished/$toolname/$inputhash/`:
     - This is a symlink to `tmpbuild/$toolname/$inputhash/`, which is created after the build is finished.
     - If this exists, we know that the build of a tool has finished.
-6. `tmpassembly/$toolname`:
-    - This is a symlink to `tmpout/$toolname/$inputhash/`, which enables to reference a tool without specifying it's input hash.
+6. `tmpcurrent/$toolname`:
+    - This is a symlink to `tmpfinished/$toolname/$inputhash/`, which enables to reference a tool without specifying it's input hash.
 
 ### Skipping Package Builds
 
-- Now, actually, before the tool is built in step 4, the build process checks if `tmpout/$toolname/$inputhash/` already exists.
-- If so, it skips steps 4. and 5 and just creates the symlink in `tmpassembly/$toolname`.
-- Since the path `tmpout/$toolname/$inputhash/` contains the hash of all inputs `$inputhash`, this accelerating path is only taken if the inputs are unchanged and therefore the output would not change either.
+- Now, actually, before the tool is built in step 4, the build process checks if `tmpfinished/$toolname/$inputhash/` already exists.
+- If so, it skips steps 4. and 5 and just creates the symlink in `tmpcurrent/$toolname`.
+- Since the path `tmpfinished/$toolname/$inputhash/` contains the hash of all inputs `$inputhash`, this accelerating path is only taken if the inputs are unchanged and therefore the output would not change either.
 
 ## Advantages of the Proposed Method
 
@@ -52,8 +52,8 @@ The following folders and variables are used during the build:
     - Since every tool only gets to see its input files, missing dependencies between tools are caught early.
     - To some degree, we watch that a tool build does not have side-effects.
 4. Working with different versions of OpenWrt becomes more reliable.
-    - Since staging_dir/host is reassembled (fast) from the hash addressed store in `tmpout/`, switching back-and-forth between mutliple revisions of the repo should be no problem, while still keeping all build artifacts.
-    - When a build is triggered, the `tmpassembly/` dir is assembled as quickly as possible.
+    - Since staging_dir/host is reassembled (fast) from the hash addressed store in `tmpfinished/`, switching back-and-forth between mutliple revisions of the repo should be no problem, while still keeping all build artifacts.
+    - When a build is triggered, the `tmpcurrent/` dir is assembled as quickly as possible.
     - (Of course this only makes the builds really stable if we apply the proposed method also to toolchain, kernel, package and image builds)
 5. Cache servers could be used in the future.
     - Since the inputhashes and outhashes are stored for every tool, it would be also possible in the future to store them as artifacts on a server and pull them from there if appropriate.

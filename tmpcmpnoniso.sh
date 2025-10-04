@@ -29,6 +29,6 @@ fi
 
 diff --color=auto -u tmp/$toolname-before tmp/$toolname-after | grep '^+' | grep -v '^+++' | sed 's,^+,,' | sed 's|^staging_dir/||' | sort > tmp/$toolname.noniso.txt
 
-find tmpassembly/$toolname/ -type f | sed " s|tmpassembly/$toolname/||" | grep -ve '^.meta' | sort > tmp/$toolname.iso.txt
+find tmpcurrent/$toolname/ -type f | sed " s|tmpcurrent/$toolname/||" | grep -ve '^.meta' | sort > tmp/$toolname.iso.txt
 
 diff --color=auto -u tmp/$toolname.noniso.txt tmp/$toolname.iso.txt || true

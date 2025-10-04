@@ -4,7 +4,7 @@ toolname=$1
 
 set -e
 
-tmpassembly=tmpassembly
+tmpcurrent=tmpcurrent
 tmpmetabasic=tmpmetabasic
 tmpenv=tmpenv
 tmpmeta=tmpmeta
@@ -24,8 +24,8 @@ copyit() {
 
 add_dependency() {
     #echo "$toolname: Adding dependency $1"
-    cat tmpassembly/$1/.meta/output.hashes 2>/dev/null >> $prefile || {
-        echo "$toolname: Dependency $1 not found in tmpassembly! Did you forget to build it first?"
+    cat tmpcurrent/$1/.meta/output.hashes 2>/dev/null >> $prefile || {
+        echo "$toolname: Dependency $1 not found in tmpcurrent! Did you forget to build it first?"
         exit 1
     }
 }
@@ -42,11 +42,11 @@ sort -u -k 2 $prefile -o $prefile
 ## try to use cached package
 
 inputhashpre=$(cat $prefile | md5sum - | awk '{print $1}')
-tmpout=tmpout/$toolname/$inputhashpre
+tmpfinished=tmpfinished/$toolname/$inputhashpre
 
-if [ -d $tmpout ]; then
-    echo "reusing $tmpout, since it already exists."
-    ln -s ../$tmpout $tmpassembly/$toolname
+if [ -d $tmpfinished ]; then
+    echo "reusing $tmpfinished, since it already exists."
+    ln -s ../$tmpfinished $tmpcurrent/$toolname
     exit 0
 fi
 
@@ -55,7 +55,7 @@ fi
 add_dependency() {
     destpath=$tmpenv/staging_dir
     mkdir -p $destpath
-    cp --remove-destination -r $tmpassembly/$1/* $destpath
+    cp --remove-destination -r $tmpcurrent/$1/* $destpath
 }
 
 # TODO: find out if CONFIG_... variables can leak in
@@ -78,7 +78,7 @@ diff -q $tmpmeta/input.hashes.pre $tmpmeta/input.hashes || {
     exit 1
 }
 
-tmpout=tmpout/$toolname/$inputhash
+tmpfinished=tmpfinished/$toolname/$inputhash
 tmpbuild=tmpbuild/$toolname/$inputhash
 
 mkdir -p $tmpbuild/host/bin # some packages seem to require this
@@ -133,21 +133,21 @@ cmp -s $tmpmeta/staging_dir_before.hash $tmpmeta/staging_dir_after.hash || {
 }
 
 # To be atomic and make sure a build has really finished, we first build to $tmpbuild
-# and then move it to $tmpout.
-mkdir -p $(dirname $tmpout)
-ln -s ../../$tmpbuild/ $tmpout
+# and then move it to $tmpfinished.
+mkdir -p $(dirname $tmpfinished)
+ln -s ../../$tmpbuild/ $tmpfinished
 
 # Generate output hashes
-find $tmpout/ -type f -exec md5sum {} + | sed "s|$tmpout/|$tmpenv/staging_dir/|" | sort -k 2 > $tmpmeta/output.hashes
+find $tmpfinished/ -type f -exec md5sum {} + | sed "s|$tmpfinished/|$tmpenv/staging_dir/|" | sort -k 2 > $tmpmeta/output.hashes
 
-mkdir -p $tmpout/.meta
+mkdir -p $tmpfinished/.meta
 
 # TODO: remove $tmpenv/... from hashes
 
 # Copy input & outputhashes to output metadata
-cp $tmpmeta/input.hashes $tmpout/.meta/
-cp $tmpmeta/output.hashes $tmpout/.meta/
+cp $tmpmeta/input.hashes $tmpfinished/.meta/
+cp $tmpmeta/output.hashes $tmpfinished/.meta/
 
-ln -s ../$tmpout/ $tmpassembly/$toolname
+ln -s ../$tmpfinished/ $tmpcurrent/$toolname
 
-find $tmpout
+find $tmpfinished

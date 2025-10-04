@@ -9,9 +9,9 @@ export tmpmetabasic=tmpmetabasic
 rm -rf $tmpmetabasic
 mkdir -p $tmpmetabasic
 
-export tmpassembly=tmpassembly
-rm -rf $tmpassembly
-mkdir -p $tmpassembly
+export tmpcurrent=tmpcurrent
+rm -rf $tmpcurrent
+mkdir -p $tmpcurrent
 
 # some preparations
 

@@ -35,9 +35,9 @@ git-src
 .cproject
 .ccache
 .vscode*
-/tmpassembly
+/tmpcurrent
 /tmpbuild
 /tmpenv
 /tmpmeta
-/tmpout
+/tmpfinished
 /tmpmetabasic
