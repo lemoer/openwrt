@@ -24,11 +24,11 @@ define Host/Configure
 endef
 
 define Host/Install
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/sdimage $(STAGING_DIR_HOST)/bin/sdimage
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/sdimage $(HOST_BUILD_PREFIX)/bin/sdimage
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/sdimage
+	rm -f $(HOST_BUILD_PREFIX)/bin/sdimage
 endef
 
 $(eval $(call HostBuild))
