@@ -2,6 +2,24 @@
 
 from ninja import ninja_syntax
 
+def parse_openwrt_config(path):
+    config = {}
+    with open(path, "r") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") and "not set" not in line:
+                continue
+
+            # Example: CONFIG_FOO=y
+            if line.startswith("CONFIG_"):
+                key, value = line.split("=", 1)
+                config[key] = value
+            # Example: # CONFIG_BAR is not set
+            elif line.startswith("# CONFIG_") and line.endswith("is not set"):
+                key = line.split()[1]
+                config[key] = False  # oder False
+
+    return config
 
 writer = ninja_syntax.Writer(open("build.ninja", "w"))
 
@@ -60,7 +78,6 @@ tool(writer, 'libtool', depends_on=automake + basic_deps + ['gnulib', 'missing-m
 tool(writer, 'flex', depends_on=automake + basic_deps + ['libtool'])
 tool(writer, 'gmp', depends_on=basic_deps + ['libtool'])
 tool(writer, 'fakeroot', depends_on=basic_deps + ['libtool'])
-tool(writer, 'genext2fs', depends_on=automake + basic_deps + ['libtool'])
 tool(writer, 'gengetopt', depends_on=automake + basic_deps + ['libtool'])
 tool(writer, 'patchelf', depends_on=automake + basic_deps + ['libtool'])
 
@@ -68,13 +85,10 @@ tool(writer, 'bison', depends_on=automake + basic_deps + ['flex', 'missing-macro
 
 tool(writer, 'findutils', depends_on=automake + basic_deps + ['bison'])
 
-tool(writer, 'lzma-old', depends_on=basic_deps + ['zlib'])
-
 tool(writer, 'dosfstools', depends_on=automake + ['libdeflate'])
 tool(writer, 'coreutils', depends_on=automake + basic_deps + ['missing-macros', 'bison', 'gnulib'])
 tool(writer, 'padjffs2', depends_on=basic_deps + ['findutils'])
 tool(writer, 'squashfs4', depends_on=basic_deps + ['xz', 'zlib'])
-tool(writer, 'squashfs3-lzma', depends_on=basic_deps + ['lzma-old'])
 tool(writer, 'util-linux', depends_on=meson + basic_deps + ['sed', 'bison'])
 
 tool(writer, 'autoconf-archive', depends_on=automake + basic_deps + ['missing-macros'])
@@ -83,7 +97,6 @@ tool(writer, 'lz4', depends_on=meson + basic_deps + ['sed'])
 tool(writer, 'make-ext4fs', depends_on=basic_deps + ['zlib'])
 
 tool(writer, 'mtd-utils', depends_on=automake + basic_deps + ['libtool', 'zlib', 'util-linux', 'pkgconf'])
-tool(writer, 'cbootimage', depends_on=automake + ['libdeflate'])
 
 tool(writer, 'mklibs', depends_on=automake + basic_deps + ['libtool'])
 
@@ -104,11 +117,76 @@ tool(writer, 'cmake', depends_on=basic_deps + ['libressl', 'ninja', 'expat', 'zs
 
 tool(writer, 'bzip2', depends_on=cmake + basic_deps + ['zlib'])
 tool(writer, 'firmware-utils', depends_on=cmake + basic_deps + ['zlib', 'libressl'])
-tool(writer, 'liblzo', depends_on=cmake + ['libdeflate'])
+
 tool(writer, 'lzop', depends_on=cmake + basic_deps + ['liblzo'])
-tool(writer, 'mold', depends_on=cmake + basic_deps + ['zlib', 'zstd'])
-tool(writer, 'yafut', depends_on=cmake + ['libdeflate'])
 
 tool(writer, 'elfutils', depends_on=automake + basic_deps + ['libtool', 'bison', 'gnulib', 'zlib', 'zstd'])
 tool(writer, 'e2fsprogs', depends_on=automake + basic_deps + ['gnulib', 'libtool', 'util-linux', 'pkgconf'])
 tool(writer, 'erofs-utils', depends_on=basic_deps + ['libtool', 'xz', 'lz4', 'util-linux'])
+
+
+config = parse_openwrt_config(".config")
+
+is_y = lambda config_part: config.get("CONFIG_" + config_part) == 'y'
+build_all_host_tools = is_y('BUILD_ALL_HOST_TOOLS')
+is_target = lambda targetname: is_y(f'TARGET_{targetname}')
+
+if build_all_host_tools:
+    tool(writer, 'liblzo', depends_on=cmake + ['libdeflate'])
+else:
+    print("Skipping liblzo as CONFIG_BUILD_ALL_HOST_TOOLS is not set.")
+
+if build_all_host_tools or is_target('apm821xx') or is_target('gemini'):
+    tool(writer, 'genext2fs', depends_on=automake + basic_deps + ['libtool'])
+else:
+    print("Skipping genext2fs as CONFIG_BUILD_ALL_HOST_TOOLS is not set and target is not apm821xx or gemini.")
+
+if build_all_host_tools or is_target('ath79'):
+    # lzma-old and squashfs3-lzma
+    tool(writer, 'lzma-old', depends_on=basic_deps + ['zlib'])
+    tool(writer, 'squashfs3-lzma', depends_on=basic_deps + ['lzma-old'])
+else:
+    print("Skipping lzma-old and squashfs3-lzma as CONFIG_BUILD_ALL_HOST_TOOLS is not set and target is not ath79.")
+
+if build_all_host_tools or is_target('mxsl'):
+    # elftosb and sdimage
+    tool(writer, 'elftosb', depends_on=automake + basic_deps + ['libtool', 'bison', 'flex'])
+    tool(writer, 'sdimage', depends_on=automake + basic_deps + ['libtool', 'bison', 'flex', 'elftosb'])
+else:
+    print("Skipping elftosb and sdimage as CONFIG_BUILD_ALL_HOST_TOOLS is not set and target is not mxsl.")
+
+if build_all_host_tools or is_target('realtek'):
+    # 7z
+    tool(writer, '7z', depends_on=basic_deps + ['bzip2', 'lzma-old', 'zstd', 'zlib'])
+else:
+    print("Skipping 7z as CONFIG_BUILD_ALL_HOST_TOOLS is not set and target is not realtek.")
+
+if build_all_host_tools or is_target('tegra'):
+    # cbootimage cbootimage-configs
+    tool(writer, 'cbootimage-configs', depends_on=automake + ['libdeflate'])
+    tool(writer, 'cbootimage', depends_on=automake + basic_deps + ['libtool', 'cbootimage-configs'])
+else:
+    print("Skipping cbootimage and cbootimage-configs as CONFIG_BUILD_ALL_HOST_TOOLS is not set and target is not tegra.")
+
+if is_y('USES_MIRROR'):
+    # yafut
+    tool(writer, 'yafut', depends_on=cmake + basic_deps + ['libdeflate'])
+else:
+    print("Skipping yafut as CONFIG_USES_MIRROR is not set.")
+
+if is_y('USE_SPARSE'):
+    tool(writer, 'sparse', depends_on=automake + basic_deps + ['libtool'])
+else:
+    print("Skipping sparse as CONFIG_USE_SPARSE is not set.")
+
+if is_y('USE_LLVM_BUILD'):
+    # llvm-bpf
+    tool(writer, 'llvm-bpf', depends_on=cmake + basic_deps + ['libressl', 'zlib'])
+else:
+    print("Skipping llvm-bpf as CONFIG_USE_LLVM_BUILD is not set.")
+
+if is_y('USE_MOLD'):
+    # mold
+    tool(writer, 'mold', depends_on=cmake + basic_deps + ['zlib', 'zstd'])
+else:
+    print("Skipping mold as CONFIG_USE_MOLD is not set.")
