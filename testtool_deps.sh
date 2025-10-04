@@ -32,6 +32,7 @@ case "$toolname" in
         add_dependency xz
         ;;
     b43-tools)
+        uses_automake
         add_dependency bison
         ;;
     bc)
@@ -44,10 +45,12 @@ case "$toolname" in
         uses_automake
         ;;
     bzip2)
+        add_dependency zlib
+        add_dependency ninja
         add_dependency cmake
         ;;
     cbootimage)
-        add_dependency automake
+        uses_automake
         ;;
     cmake)
         add_dependency libressl
@@ -96,7 +99,10 @@ case "$toolname" in
         uses_automake
         ;;
     firmware-utils)
+        add_dependency zlib
+        add_dependency libressl
         add_dependency cmake
+        add_dependency ninja
         ;;
     flex)
         add_dependency libtool
@@ -119,6 +125,7 @@ case "$toolname" in
         ;;
     liblzo)
         add_dependency cmake
+        add_dependency ninja
         ;;
     libressl)
         add_dependency pkgconf
@@ -139,10 +146,12 @@ case "$toolname" in
         ;;
     lzop)
         add_dependency cmake
+        add_dependency ninja
         add_dependency liblzo
         ;;
     llvm-bpf)
         add_dependency cmake
+        add_dependency ninja
         ;;
     make-ext4fs)
         add_dependency zlib
@@ -154,14 +163,17 @@ case "$toolname" in
         add_dependency autoconf
         ;;
     mkimage)
+        uses_automake
         add_dependency bison
         add_dependency libressl
         ;;
     mklibs)
+        uses_automake
         add_dependency libtool
         ;;
     mold)
         add_dependency cmake
+        add_dependency ninja
         add_dependency zlib
         add_dependency zstd
         ;;
@@ -211,5 +223,6 @@ case "$toolname" in
         ;;
     yafut)
         add_dependency cmake
+        add_dependency ninja
         ;;
 esac
