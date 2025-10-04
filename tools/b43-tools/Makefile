@@ -30,18 +30,18 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(INSTALL_DIR) $(STAGING_DIR_HOST)/bin
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/fwcutter/b43-fwcutter $(STAGING_DIR_HOST)/bin/
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/assembler/b43-asm $(STAGING_DIR_HOST)/bin/
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/assembler/b43-asm.bin $(STAGING_DIR_HOST)/bin/
-	$(INSTALL_BIN) ./files/b43-fwsquash.py $(STAGING_DIR_HOST)/bin/
+	$(INSTALL_DIR) $(HOST_BUILD_PREFIX)/bin
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/fwcutter/b43-fwcutter $(HOST_BUILD_PREFIX)/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/assembler/b43-asm $(HOST_BUILD_PREFIX)/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/assembler/b43-asm.bin $(HOST_BUILD_PREFIX)/bin/
+	$(INSTALL_BIN) ./files/b43-fwsquash.py $(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/b43-fwcutter
-	rm -f $(STAGING_DIR_HOST)/bin/b43-asm
-	rm -f $(STAGING_DIR_HOST)/bin/b43-asm.bin
-	rm -f $(STAGING_DIR_HOST)/bin/b43-fwsquash.py
+	rm -f $(HOST_BUILD_PREFIX)/bin/b43-fwcutter
+	rm -f $(HOST_BUILD_PREFIX)/bin/b43-asm
+	rm -f $(HOST_BUILD_PREFIX)/bin/b43-asm.bin
+	rm -f $(HOST_BUILD_PREFIX)/bin/b43-fwsquash.py
 endef
 
 $(eval $(call HostBuild))
