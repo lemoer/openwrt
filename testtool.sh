@@ -138,7 +138,7 @@ mkdir -p $(dirname $tmpout)
 ln -s ../../$tmpbuild/ $tmpout
 
 # Generate output hashes
-find $tmpout/ -type f | xargs -r md5sum | sed "s|$tmpout/|$tmpenv/staging_dir/|" | sort -k 2 > $tmpmeta/output.hashes
+find $tmpout/ -type f -exec md5sum {} + | sed "s|$tmpout/|$tmpenv/staging_dir/|" | sort -k 2 > $tmpmeta/output.hashes
 
 mkdir -p $tmpout/.meta
 
