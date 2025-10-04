@@ -41,3 +41,6 @@ git-src
 /tmpmeta
 /tmpfinished
 /tmpmetabasic
+build.ninja
+.ninja_lock
+.ninja_log
