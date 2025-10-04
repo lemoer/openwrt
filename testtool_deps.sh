@@ -12,6 +12,17 @@ uses_automake() {
     add_dependency sed
 }
 
+uses_cmake() {
+    add_dependency cmake
+    add_dependency ninja
+}
+
+uses_meson() {
+    add_dependency meson
+    add_dependency ninja
+    add_dependency sed
+}
+
 # The following are the dependencies between tools, as far as I could
 # figure out.
 # For each dependency, call add_dependency with the dependency name.
@@ -40,14 +51,13 @@ case "$toolname" in
         add_dependency libtool
         ;;
     bison)
+        uses_automake
         add_dependency flex
         add_dependency missing-macros
-        uses_automake
         ;;
     bzip2)
+        uses_cmake
         add_dependency zlib
-        add_dependency ninja
-        add_dependency cmake
         ;;
     cbootimage)
         uses_automake
@@ -95,26 +105,25 @@ case "$toolname" in
         add_dependency libtool
         ;;
     findutils)
-        add_dependency bison
         uses_automake
+        add_dependency bison
         ;;
     firmware-utils)
+        uses_cmake
         add_dependency zlib
         add_dependency libressl
-        add_dependency cmake
-        add_dependency ninja
         ;;
     flex)
         add_dependency libtool
         uses_automake
         ;;
     genext2fs)
-        add_dependency libtool
         uses_automake
+        add_dependency libtool
         ;;
     gengetopt)
-        add_dependency libtool
         uses_automake
+        add_dependency libtool
         ;;
     gmp)
         add_dependency libtool
@@ -124,12 +133,11 @@ case "$toolname" in
         add_dependency gmp
         ;;
     liblzo)
-        add_dependency cmake
-        add_dependency ninja
+        uses_cmake
         ;;
     libressl)
-        add_dependency pkgconf
         uses_automake
+        add_dependency pkgconf
         ;;
     libtool)
         uses_automake
@@ -137,21 +145,17 @@ case "$toolname" in
         add_dependency missing-macros
         ;;
     lz4)
-        add_dependency meson
-        add_dependency sed
-        add_dependency ninja
+        uses_meson
         ;;
     lzma-old)
         add_dependency zlib
         ;;
     lzop)
-        add_dependency cmake
-        add_dependency ninja
+        uses_cmake
         add_dependency liblzo
         ;;
     llvm-bpf)
-        add_dependency cmake
-        add_dependency ninja
+        uses_cmake
         ;;
     make-ext4fs)
         add_dependency zlib
@@ -172,8 +176,7 @@ case "$toolname" in
         add_dependency libtool
         ;;
     mold)
-        add_dependency cmake
-        add_dependency ninja
+        uses_cmake
         add_dependency zlib
         add_dependency zstd
         ;;
@@ -196,13 +199,11 @@ case "$toolname" in
         add_dependency findutils
         ;;
     patchelf)
-        add_dependency libtool
         uses_automake
+        add_dependency libtool
         ;;
     pkgconf)
-        add_dependency ninja
-        add_dependency meson
-        add_dependency sed
+        uses_meson
         ;;
     quilt)
         uses_automake
@@ -216,13 +217,10 @@ case "$toolname" in
         add_dependency zlib
         ;;
     util-linux)
-        add_dependency meson
-        add_dependency ninja
-        add_dependency sed
+        uses_meson
         add_dependency bison
         ;;
     yafut)
-        add_dependency cmake
-        add_dependency ninja
+        uses_cmake
         ;;
 esac
