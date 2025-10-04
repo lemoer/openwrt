@@ -21,11 +21,11 @@ TAR_OPTIONS := -C $(HOST_BUILD_DIR) $(TAR_OPTIONS)
 HOST_MAKE_FLAGS += -f makefile.gcc
 
 define Host/Install
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/$(HOST_MAKE_PATH)/_o/7zr $(STAGING_DIR_HOST)/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/$(HOST_MAKE_PATH)/_o/7zr $(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/7zr
+	rm -f $(HOST_BUILD_PREFIX)/bin/7zr
 endef
 
 $(eval $(call HostBuild))
