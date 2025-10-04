@@ -4,6 +4,8 @@ toolname='000-meta-prereq'
 
 set -e
 
+tmpcurrent=tmpcurrent
+tmpmetabasic=tmpmetabasic
 tmpenv=tmpenv
 tmpmeta=tmpmeta
 

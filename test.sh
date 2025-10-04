@@ -103,7 +103,7 @@ sh testtool.sh bzip2
 sh testtool.sh firmware-utils
 sh testtool.sh liblzo
 sh testtool.sh lzop
-#sh testtool.sh llvm-bpf
+#sh testtool.sh llvm-bpf # takes too long on my laptop
 sh testtool.sh mold
 sh testtool.sh yafut
 
