@@ -54,7 +54,7 @@ mv $(pwd)/tmpenv/staging_dir/host/ $tmpfinished/host
 # TODO: remove $tmpenv/... from hashes
 
 # Generate output hashes
-find $tmpfinished/ -type f | xargs -r md5sum | sed "s|$tmpfinished/|$tmpenv/staging_dir/|" | sort -k 2 > $tmpmeta/output.hashes
+find $tmpfinished/ -type f | xargs -r md5sum | sed "s|$tmpfinished/|staging_dir/|" | sort -k 2 > $tmpmeta/output.hashes
 
 mkdir -p $tmpfinished/.meta
 

@@ -35,7 +35,7 @@ cat $tmpmetabasic/basic.hashes > $prefile
 
 . ./testtool_deps.sh
 
-find tools/$toolname -type f -exec md5sum {} + | sort -k 2 | sed "s| tools/| $tmpenv/tools/|" >> $prefile
+find tools/$toolname -type f -exec md5sum {} + | sort -k 2 >> $prefile
 
 sort -u -k 2 $prefile -o $prefile
 
@@ -68,7 +68,7 @@ copyit tools/$toolname
 copyit scripts
 
 # build hashes over $tmpenv before build (which marks all inputs)
-find $tmpenv -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/input.hashes
+find $tmpenv -type f -exec md5sum {} + | sort -k 2 | sed "s| $tmpenv/| |" > $tmpmeta/input.hashes
 cat $tmpmeta/input.hashes | md5sum - | awk '{print $1}' > $tmpmeta/input.hash
 inputhash=$(cat $tmpmeta/input.hash)
 
@@ -84,7 +84,7 @@ tmpbuild=tmpbuild/$toolname/$inputhash
 mkdir -p $tmpbuild/host/bin # some packages seem to require this
 
 # build hashes over $tmpenv/staging_dir
-find $tmpenv/staging_dir -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/staging_dir_before.hash
+find $tmpenv/staging_dir -type f -exec md5sum {} + | sed "s| $tmpenv/| |" | sort -k 2 > $tmpmeta/staging_dir_before.hash
 
 # HOST_BUILD_PREFIX sets where the tool is installed to.
 
@@ -124,7 +124,7 @@ env -i make -j 1 V=s HOST_OS=Linux PATH=$PATH:$(pwd)/tmpenv/staging_dir/host/bin
 
 # Build hashes over $tmpenv/staging_dir again and check that
 # they are unchanged.
-find $tmpenv/staging_dir -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/staging_dir_after.hash
+find $tmpenv/staging_dir -type f -exec md5sum {} + | sort -k 2 | sed "s| $tmpenv/| |" > $tmpmeta/staging_dir_after.hash
 
 cmp -s $tmpmeta/staging_dir_before.hash $tmpmeta/staging_dir_after.hash || {
     diff --color=auto -u $tmpmeta/staging_dir_before.hash $tmpmeta/staging_dir_after.hash || true
@@ -138,7 +138,7 @@ mkdir -p $(dirname $tmpfinished)
 ln -s ../../$tmpbuild/ $tmpfinished
 
 # Generate output hashes
-find $tmpfinished/ -type f -exec md5sum {} + | sed "s|$tmpfinished/|$tmpenv/staging_dir/|" | sort -k 2 > $tmpmeta/output.hashes
+find $tmpfinished/ -type f -exec md5sum {} + | sed "s| $tmpfinished/| staging_dir/|" | sort -k 2 > $tmpmeta/output.hashes
 
 mkdir -p $tmpfinished/.meta
 

@@ -28,7 +28,7 @@ copyit include
 copyit rules.mk
 copyit scripts
 
-find $tmpenv -type f -exec md5sum {} + | sort -k 2 > $tmpmetabasic/basic.hashes
+find $tmpenv -type f -exec md5sum {} + | sed "s| $tmpenv/| |" | sort -k 2 > $tmpmetabasic/basic.hashes
 
 sh testprereq.sh
 
