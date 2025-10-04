@@ -6,8 +6,8 @@ set -e
 
 tmpcurrent=tmpcurrent
 tmpmetabasic=tmpmetabasic
-tmpenv=tmpenv
-tmpmeta=tmpmeta
+tmpenv=$(mktemp -d)
+tmpmeta=$tmpenv.meta
 
 rm -rf $tmpenv
 mkdir -p $tmpenv
@@ -120,7 +120,7 @@ if [ "$isolate" -eq 1 ]; then
 fi
 
 
-env -i make -j 1 V=s HOST_OS=Linux PATH=$PATH:$(pwd)/tmpenv/staging_dir/host/bin HOST_BUILD_PREFIX=$(pwd)/$tmpbuild/host TOPDIR=$(pwd)/tmpenv -C tools/$toolname/ compile
+env -i make -j 1 V=s HOST_OS=Linux PATH=$PATH:$tmpenv/staging_dir/host/bin HOST_BUILD_PREFIX=$(pwd)/$tmpbuild/host TOPDIR=$tmpenv -C tools/$toolname/ compile
 
 # Build hashes over $tmpenv/staging_dir again and check that
 # they are unchanged.
@@ -151,3 +151,6 @@ cp $tmpmeta/output.hashes $tmpfinished/.meta/
 ln -s ../$tmpfinished/ $tmpcurrent/$toolname
 
 find $tmpfinished
+
+rm -rf $tmpenv
+rm -rf $tmpmeta
