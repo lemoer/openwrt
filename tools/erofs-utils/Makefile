@@ -28,13 +28,13 @@ HOST_CONFIGURE_ARGS=\
 	--with-uuid
 
 define Host/Install
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/mkfs/mkfs.erofs $(STAGING_DIR_HOST)/bin/
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/fsck/fsck.erofs $(STAGING_DIR_HOST)/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/mkfs/mkfs.erofs $(HOST_BUILD_PREFIX)/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/fsck/fsck.erofs $(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/mkfs.erofs
-	rm -f $(STAGING_DIR_HOST)/bin/fsck.erofs
+	rm -f $(HOST_BUILD_PREFIX)/bin/mkfs.erofs
+	rm -f $(HOST_BUILD_PREFIX)/bin/fsck.erofs
 endef
 
 $(eval $(call HostBuild))
