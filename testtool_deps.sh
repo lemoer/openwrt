@@ -94,8 +94,11 @@ case "$toolname" in
         add_dependency gnulib
         add_dependency zlib
         add_dependency zstd
+        add_dependency pkgconf
         ;;
     erofs-utils)
+        uses_automake
+        add_dependency pkgconf
         add_dependency libtool
         add_dependency xz
         add_dependency lz4
