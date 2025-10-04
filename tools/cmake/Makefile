@@ -32,7 +32,7 @@ HOST_CONFIGURE_VARS += \
 HOST_CONFIGURE_ARGS := \
 	--no-debugger \
 	$(if $(MAKE_JOBSERVER),--parallel="$(MAKE_JOBSERVER)") \
-	--prefix="$(STAGING_DIR_HOST)" \
+	--prefix="$(HOST_BUILD_PREFIX)" \
 	--system-expat \
 	--system-liblzma \
 	--system-zlib \
