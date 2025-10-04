@@ -74,7 +74,12 @@ The following folders and variables are used during the build:
 
 # Next-Steps/Ideas
 
-- Switch to a python + ninja approach?
 - Compare if the result is equivalent to building with the standard OpenWrt build process.
 - Maybe make the inputs more specific?
     - Import only certain files from `scripts` or `include` into the `tmpenv`.
+- Build something that checks if a tool has a proper cleanup.
+
+## TODOs
+
+- Use a common download dir.
+- Recreate basic hash in python-style based approach.
