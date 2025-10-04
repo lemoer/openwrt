@@ -29,7 +29,7 @@ endif
 
 LLVM_BPF_PREFIX = llvm-bpf-$(PKG_VERSION).$(HOST_OS)-$(HOST_ARCH)
 
-CMAKE_HOST_INSTALL_PREFIX = $(STAGING_DIR_HOST)/$(LLVM_BPF_PREFIX)
+CMAKE_HOST_INSTALL_PREFIX = $(HOST_BUILD_PREFIX)/$(LLVM_BPF_PREFIX)
 
 CMAKE_HOST_OPTIONS += \
 	-DLLVM_TARGETS_TO_BUILD=BPF \
@@ -57,15 +57,15 @@ CMAKE_HOST_OPTIONS += \
 	-DCMAKE_SKIP_RPATH=OFF
 
 define Host/Install
-	rm -rf $(STAGING_DIR_HOST)/llvm-bpf*
+	rm -rf $(HOST_BUILD_PREFIX)/llvm-bpf*
 	$(Host/Install/Default)
-	ln -s $(LLVM_BPF_PREFIX) $(STAGING_DIR_HOST)/llvm-bpf
-	STRIP_KMOD= PATCHELF= STRIP=strip $(SCRIPT_DIR)/rstrip.sh $(STAGING_DIR_HOST)/llvm-bpf
+	ln -s $(LLVM_BPF_PREFIX) $(HOST_BUILD_PREFIX)/llvm-bpf
+	STRIP_KMOD= PATCHELF= STRIP=strip $(SCRIPT_DIR)/rstrip.sh $(HOST_BUILD_PREFIX)/llvm-bpf
 	echo "$(PKG_VERSION)" > $(CMAKE_HOST_INSTALL_PREFIX)/.llvm-version
 endef
 
 define Host/Uninstall
-	rm -rf $(STAGING_DIR_HOST)/llvm-bpf*
+	rm -rf $(HOST_BUILD_PREFIX)/llvm-bpf*
 endef
 
 $(eval $(call HostBuild))
