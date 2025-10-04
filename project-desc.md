@@ -71,3 +71,10 @@ The following folders and variables are used during the build:
 - Single-threaded build:
     - Since I am currently using just a shell script, everything is single-threaded.
     - However, this is just a proof-of-concept and the concept is not tied to using shell scripts.
+
+# Next-Steps/Ideas
+
+- Switch to a python + ninja approach?
+- Compare if the result is equivalent to building with the standard OpenWrt build process.
+- Maybe make the inputs more specific?
+    - Import only certain files from `scripts` or `include` into the `tmpenv`.
