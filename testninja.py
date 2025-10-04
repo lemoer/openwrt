@@ -100,7 +100,7 @@ tool(writer, 'mpc', depends_on=basic_deps + ['mpfr', 'gmp'])
 
 tool(writer, 'isl', depends_on=automake + basic_deps + ['gmp'])
 
-tool(writer, 'cmake', depends_on=basic_deps + ['libressl', 'ninja', 'expat', 'zstd'])
+tool(writer, 'cmake', depends_on=basic_deps + ['libressl', 'ninja', 'expat', 'zstd', 'zlib'])
 
 tool(writer, 'bzip2', depends_on=cmake + basic_deps + ['zlib'])
 tool(writer, 'firmware-utils', depends_on=cmake + basic_deps + ['zlib', 'libressl'])
