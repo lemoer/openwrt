@@ -25,11 +25,11 @@ define Host/Install
                $(HOST_BUILD_DIR)/src/mklibs \
                $(HOST_BUILD_DIR)/src/mklibs-copy \
                $(HOST_BUILD_DIR)/src/mklibs-readelf/mklibs-readelf \
-               $(STAGING_DIR_HOST)/bin/
+               $(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-       rm -f $(STAGING_DIR_HOST)/bin/mklibs*
+       rm -f $(HOST_BUILD_PREFIX)/bin/mklibs*
 endef
 
 $(eval $(call HostBuild))
