@@ -20,7 +20,7 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bld/linux/elftosb $(STAGING_DIR_HOST)/bin/elftosb
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bld/linux/elftosb $(HOST_BUILD_PREFIX)/bin/elftosb
 endef
 
 $(eval $(call HostBuild))
