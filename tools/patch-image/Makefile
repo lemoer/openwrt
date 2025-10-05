@@ -17,13 +17,13 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(CP) $(HOST_BUILD_DIR)/patch-cmdline $(STAGING_DIR_HOST)/bin/
-	$(CP) $(HOST_BUILD_DIR)/patch-dtb $(STAGING_DIR_HOST)/bin/
+	$(CP) $(HOST_BUILD_DIR)/patch-cmdline $(HOST_BUILD_PREFIX)/bin/
+	$(CP) $(HOST_BUILD_DIR)/patch-dtb $(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/patch-cmdline
-	rm -f $(STAGING_DIR_HOST)/bin/patch-dtb
+	rm -f $(HOST_BUILD_PREFIX)/bin/patch-cmdline
+	rm -f $(HOST_BUILD_PREFIX)/bin/patch-dtb
 endef
 
 $(eval $(call HostBuild))
