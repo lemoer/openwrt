@@ -72,8 +72,8 @@ define Meson/CreateNativeFile
 		-e "s|@PKGCONFIG@|$(PKG_CONFIG)|" \
 		-e "s|@CMAKE@|$(STAGING_DIR_HOST)/bin/cmake|" \
 		-e "s|@PYTHON@|$(PYTHON_BIN)|" \
-		-e "s|@CFLAGS@|$(foreach FLAG,$(HOST_CFLAGS) $(HOST_CPPFLAGS),'$(FLAG)',)|" \
-		-e "s|@CXXFLAGS@|$(foreach FLAG,$(HOST_CXXFLAGS) $(HOST_CPPFLAGS),'$(FLAG)',)|" \
+		-e "s|@CFLAGS@|$(foreach FLAG,$(HOST_CFLAGS) $(HOST_CPPFLAGS) -fdebug-prefix-map=$(TOPDIR)=.,'$(FLAG)',) |" \
+		-e "s|@CXXFLAGS@|$(foreach FLAG,$(HOST_CXXFLAGS) $(HOST_CPPFLAGS) -fdebug-prefix-map=$(TOPDIR)=.,'$(FLAG)',)|" \
 		-e "s|@LDFLAGS@|$(foreach FLAG,$(HOST_LDFLAGS),'$(FLAG)',)|" \
 		-e "s|@PREFIX@|$(HOST_BUILD_PREFIX)|" \
 		< $(MESON_DIR)/openwrt-native.txt.in \

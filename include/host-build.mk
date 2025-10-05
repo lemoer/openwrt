@@ -56,10 +56,10 @@ endef
 
 HOST_CONFIGURE_VARS = \
 	CC="$(HOSTCC)" \
-	CFLAGS="$(HOST_CFLAGS)" \
+	CFLAGS="$(HOST_CFLAGS) -ffile-prefix-map=$(TOPDIR)=." \
 	CXX="$(HOSTCXX)" \
-	CPPFLAGS="$(HOST_CPPFLAGS)" \
-	CXXFLAGS="$(HOST_CXXFLAGS)" \
+	CPPFLAGS="$(HOST_CPPFLAGS) -ffile-prefix-map=$(TOPDIR)=." \
+	CXXFLAGS="$(HOST_CXXFLAGS) -ffile-prefix-map=$(TOPDIR)=." \
 	LDFLAGS="$(HOST_LDFLAGS)" \
 	CONFIG_SHELL="$(SHELL)"
 
@@ -82,8 +82,8 @@ endif
 
 HOST_MAKE_VARS = \
 	CFLAGS="$(HOST_CFLAGS) -ffile-prefix-map=$(TOPDIR)=." \
-	CPPFLAGS="$(HOST_CPPFLAGS)" \
-	CXXFLAGS="$(HOST_CXXFLAGS)" \
+	CPPFLAGS="$(HOST_CPPFLAGS) -ffile-prefix-map=$(TOPDIR)=." \
+	CXXFLAGS="$(HOST_CXXFLAGS) -ffile-prefix-map=$(TOPDIR)=." \
 	LDFLAGS="$(HOST_LDFLAGS)"
 
 HOST_MAKE_FLAGS =
