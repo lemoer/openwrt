@@ -105,7 +105,9 @@ case "$toolname" in
         add_dependency util-linux
         ;;
     fakeroot)
+        uses_automake
         add_dependency libtool
+        add_dependency patch
         ;;
     findutils)
         uses_automake
