@@ -29,12 +29,12 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(INSTALL_DIR) $(STAGING_DIR_HOST)/bin/
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/zip $(STAGING_DIR_HOST)/bin/
+	$(INSTALL_DIR) $(HOST_BUILD_PREFIX)/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/zip $(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-	rm -rf $(STAGING_DIR_HOST)/bin/zip
+	rm -rf $(HOST_BUILD_PREFIX)/bin/zip
 endef
 
 $(eval $(call HostBuild))
