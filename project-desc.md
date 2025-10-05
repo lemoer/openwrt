@@ -128,3 +128,4 @@ Executed in  380.71 millis    fish           external
     - New build dependency ninja.
     - Mention how-to-setup.
 - scripts/config changes input hash on dirclean.
+- Include generation of tmpmetabasic to ninja file.
