@@ -81,7 +81,7 @@ ifneq ($(YEAR_2038),y)
 endif
 
 HOST_MAKE_VARS = \
-	CFLAGS="$(HOST_CFLAGS)" \
+	CFLAGS="$(HOST_CFLAGS) -ffile-prefix-map=$(TOPDIR)=." \
 	CPPFLAGS="$(HOST_CPPFLAGS)" \
 	CXXFLAGS="$(HOST_CXXFLAGS)" \
 	LDFLAGS="$(HOST_LDFLAGS)"
