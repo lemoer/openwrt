@@ -27,13 +27,13 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/mcopy $(STAGING_DIR_HOST)/bin/
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/mmd $(STAGING_DIR_HOST)/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/mcopy $(HOST_BUILD_PREFIX)/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/mmd $(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/mcopy
-	rm -f $(STAGING_DIR_HOST)/bin/mmd
+	rm -f $(HOST_BUILD_PREFIX)/bin/mcopy
+	rm -f $(HOST_BUILD_PREFIX)/bin/mmd
 endef
 
 $(eval $(call HostBuild))
