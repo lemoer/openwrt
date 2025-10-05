@@ -90,7 +90,7 @@ Executed in    1.69 secs    fish           external
    sys time    1.14 secs    1.11 millis    1.13 secs
 ```
 
-## Multi-Threaded
+### Multi-Threaded
 
 **Standard OpenWrt-Build Process:**
 ```
@@ -108,6 +108,30 @@ ________________________________________________________
 Executed in  380.71 millis    fish           external
    usr time  733.18 millis    0.00 millis  733.18 millis
    sys time  594.56 millis    1.02 millis  593.54 millis
+```
+
+## Comparison of Results with OpenWrt Makefile
+
+``` shell
+# Build with OpenWrt
+make dirclean tools/compile
+
+# Build with our approach
+sh test.sh
+python3 testninja.py
+ninja -j 12
+
+# Genrate comparison outputs
+sh tmpcmpstagingdir.sh -c
+
+# Diff which filenames were created
+vim tmpcmpfilelist.diff
+
+# Diff hashes of files
+vim tmpcmp.diff
+
+# Use diffoscope to inspect diff in specific files
+sh tmpdiffoscope.sh host/bin/tune2fs
 ```
 
 # Next-Steps/Ideas
