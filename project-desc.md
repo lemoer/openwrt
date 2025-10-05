@@ -153,3 +153,4 @@ sh tmpdiffoscope.sh host/bin/tune2fs
     - Mention how-to-setup.
 - scripts/config changes input hash on dirclean.
 - Include generation of tmpmetabasic to ninja file.
+- Use other hashing mechanism than md5.
