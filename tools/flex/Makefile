@@ -27,7 +27,7 @@ endef
 
 define Host/Install
 	$(call Host/Compile/Default,install SUBDIRS='src tools')
-	$(LN) flex $(STAGING_DIR_HOST)/bin/lex
+	$(LN) flex $(HOST_BUILD_PREFIX)/bin/lex
 endef
 
 define Host/Uninstall
@@ -35,7 +35,7 @@ define Host/Uninstall
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/lex
+	rm -f $(HOST_BUILD_PREFIX)/bin/lex
 	$(call Host/Clean/Default)
 endef
 
