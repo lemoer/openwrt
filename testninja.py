@@ -2,6 +2,9 @@
 
 from ninja import ninja_syntax
 
+host_os = 'Linux'
+print("WARNING: This script is Linux-specific, fix this.") # FIXME, TODO
+
 def parse_openwrt_config(path):
     config = {}
     with open(path, "r") as f:
@@ -24,6 +27,7 @@ def parse_openwrt_config(path):
 writer = ninja_syntax.Writer(open("build.ninja", "w"))
 
 writer.rule("cleancurrent", command="rm -rf tmpcurrent; mkdir -p tmpcurrent")
+writer.rule('preparebuild', command='sh testprepare.sh')
 writer.rule('prereqbuild', command='sh testprereq.sh')
 writer.rule('toolbuild', command='sh testtool.sh $toolname')
 
@@ -48,6 +52,12 @@ writer.build(
     inputs=['clean-current-dir']
 )
 
+writer.build(
+    'tmpcurrent/000-meta-prepare',
+    rule='preparebuild',
+    inputs=['clean-current-dir']
+)
+
 basic_deps = ['libdeflate']
 automake = ['sed', 'm4', 'autoconf', 'automake']
 cmake = ['cmake', 'ninja']
@@ -68,7 +78,7 @@ tool(writer, 'sed', depends_on=basic_deps)
 tool(writer, 'meson', depends_on=basic_deps + ['ninja'])
 tool(writer, 'autoconf', depends_on=basic_deps + ['m4'])
 
-tool(writer, 'pkgconf', depends_on=basic_deps + ['meson', 'ninja'])
+tool(writer, 'pkgconf', depends_on=basic_deps + meson)
 tool(writer, 'missing-macros', depends_on=basic_deps + ['autoconf'])
 
 tool(writer, 'automake', depends_on=basic_deps + ['sed', 'm4', 'autoconf', 'pkgconf', 'xz'])
@@ -76,7 +86,6 @@ tool(writer, 'automake', depends_on=basic_deps + ['sed', 'm4', 'autoconf', 'pkgc
 tool(writer, 'libtool', depends_on=automake + basic_deps + ['gnulib', 'missing-macros'])
 
 tool(writer, 'flex', depends_on=automake + basic_deps + ['libtool'])
-tool(writer, 'gmp', depends_on=basic_deps + ['libtool'])
 tool(writer, 'fakeroot', depends_on=basic_deps + ['libtool'])
 tool(writer, 'gengetopt', depends_on=automake + basic_deps + ['libtool'])
 tool(writer, 'patchelf', depends_on=automake + basic_deps + ['libtool'])
@@ -86,7 +95,6 @@ tool(writer, 'bison', depends_on=automake + basic_deps + ['flex', 'missing-macro
 tool(writer, 'findutils', depends_on=automake + basic_deps + ['bison'])
 
 tool(writer, 'dosfstools', depends_on=automake + ['libdeflate'])
-tool(writer, 'coreutils', depends_on=automake + basic_deps + ['missing-macros', 'bison', 'gnulib'])
 tool(writer, 'padjffs2', depends_on=basic_deps + ['findutils'])
 tool(writer, 'squashfs4', depends_on=basic_deps + ['xz', 'zlib'])
 tool(writer, 'util-linux', depends_on=meson + basic_deps + ['sed', 'bison'])
@@ -101,40 +109,74 @@ tool(writer, 'mtd-utils', depends_on=automake + basic_deps + ['libtool', 'zlib',
 tool(writer, 'mklibs', depends_on=automake + basic_deps + ['libtool'])
 
 tool(writer, 'bc', depends_on=basic_deps + ['bison', 'libtool'])
-tool(writer, 'b43-tools', depends_on=automake + basic_deps + ['bison'])
 
 tool(writer, 'quilt', depends_on=automake + basic_deps + ['findutils'])
 
 tool(writer, 'libressl', depends_on=automake + basic_deps + ['pkgconf'])
 tool(writer, 'mkimage', depends_on=automake + basic_deps + ['bison', 'libressl'])
 
-tool(writer, 'mpfr', depends_on=automake + basic_deps + ['gmp'])
-tool(writer, 'mpc', depends_on=basic_deps + ['mpfr', 'gmp'])
-
-tool(writer, 'isl', depends_on=automake + basic_deps + ['gmp'])
-
 tool(writer, 'cmake', depends_on=basic_deps + ['libressl', 'ninja', 'expat', 'zstd', 'zlib'])
-
-tool(writer, 'bzip2', depends_on=cmake + basic_deps + ['zlib'])
 tool(writer, 'firmware-utils', depends_on=cmake + basic_deps + ['zlib', 'libressl'])
-
-tool(writer, 'lzop', depends_on=cmake + basic_deps + ['liblzo'])
 
 tool(writer, 'elfutils', depends_on=automake + basic_deps + ['libtool', 'bison', 'gnulib', 'zlib', 'zstd'])
 tool(writer, 'e2fsprogs', depends_on=automake + basic_deps + ['gnulib', 'libtool', 'util-linux', 'pkgconf'])
 tool(writer, 'erofs-utils', depends_on=basic_deps + ['libtool', 'xz', 'lz4', 'util-linux'])
 
+tool(writer, 'cpio', depends_on=basic_deps)
+tool(writer, 'flock', depends_on=basic_deps)
+tool(writer, 'lzma', depends_on=basic_deps)
+tool(writer, 'patch-image', depends_on=basic_deps)
+tool(writer, 'zip', depends_on=basic_deps)
+tool(writer, 'mtools', depends_on=basic_deps)
+tool(writer, 'sstrip', depends_on=basic_deps)
 
 config = parse_openwrt_config(".config")
 
 is_y = lambda config_part: config.get("CONFIG_" + config_part) == 'y'
+is_n = lambda config_part: config.get("CONFIG_" + config_part, False) == False
 build_all_host_tools = is_y('BUILD_ALL_HOST_TOOLS')
 is_target = lambda targetname: is_y(f'TARGET_{targetname}')
 
-if build_all_host_tools:
+build_b43_tools = is_y('SDK') or is_y('PACKAGE_kmod-b43') or is_y('BRCMSMAC_USE_FW_FROM_WL')
+build_bzip2_tools = is_y('SDK') or is_y('TARGET_INITRAMFS_COMPRESSION_BZIP2')
+build_lz4_tools = is_y('SDK') or is_y('TARGET_INITRAMFS_COMPRESSION_LZ4')
+build_lzo_tools = is_y('SDK') or is_y('TARGET_INITRAMFS_COMPRESSION_LZO')
+build_toolchain = is_n('EXTERNAL_TOOLCHAIN')
+build_isl = is_n('EXTERNAL_TOOLCHAIN') and is_y('GCC_USE_GRAPHITE')
+build_gmp = build_isl or build_toolchain
+build_coreutils = host_os != 'Linux' or is_y('SDK')
+
+if build_all_host_tools or build_b43_tools:
+    tool(writer, 'b43-tools', depends_on=automake + basic_deps + ['bison'])
+
+if build_all_host_tools or build_bzip2_tools:
+    tool(writer, 'bzip2', depends_on=cmake + basic_deps + ['zlib'])
+
+if build_all_host_tools or build_gmp:
+    tool(writer, 'gmp', depends_on=basic_deps + ['libtool'])
+
+if build_all_host_tools or build_isl:
+    tool(writer, 'isl', depends_on=automake + basic_deps + ['gmp'])
+
+if build_all_host_tools or build_lz4_tools:
+    tool(writer, 'lz4', depends_on=meson + basic_deps + ['sed'])
+
+if build_all_host_tools or build_lzo_tools:
     tool(writer, 'liblzo', depends_on=cmake + ['libdeflate'])
-else:
-    print("Skipping liblzo as CONFIG_BUILD_ALL_HOST_TOOLS is not set.")
+    tool(writer, 'lzop', depends_on=cmake + basic_deps + ['liblzo'])
+
+if build_all_host_tools or build_toolchain:
+    tool(writer, 'mpfr', depends_on=automake + basic_deps + ['libtool', 'gmp'])
+    tool(writer, 'mpc', depends_on=basic_deps + ['libtool', 'gmp', 'mpfr'])
+
+if build_all_host_tools or build_coreutils:
+    tool(writer, 'coreutils', depends_on=automake + basic_deps + ['missing-macros', 'bison', 'gnulib'])
+
+# TODO, FIXME: in the OpenWrt makefile, we have some weird additional
+# dependency to coreutils added to elfutils, findutils, squashfs4 and
+# util-linux, but only if coreutils is built. No idea why this is.
+
+# TODO, FIXME: CONFIG_CCACHE is ignored here and xxhash and ccache are not built.
 
 if build_all_host_tools or is_target('apm821xx') or is_target('gemini'):
     tool(writer, 'genext2fs', depends_on=automake + basic_deps + ['libtool'])
