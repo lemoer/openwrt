@@ -4,10 +4,10 @@ toolname='000-meta-prereq'
 
 set -e
 
-tmpcurrent=tmpcurrent
-tmpmetabasic=tmpmetabasic
-tmpenv=tmpenv
-tmpmeta=tmpmeta
+tmpcurrent=${tmpprefix}tmpcurrent
+tmpmetabasic=${tmpprefix}tmpmetabasic
+tmpenv=${tmpprefix}tmpenv
+tmpmeta=${tmpprefix}tmpmeta
 
 rm -rf $tmpenv
 mkdir -p $tmpenv
@@ -34,7 +34,7 @@ find $tmpenv -type f -exec md5sum {} + | sort -k 2 > $tmpmeta/input.hashes
 cat $tmpmeta/input.hashes | md5sum - | awk '{print $1}' > $tmpmeta/input.hash
 inputhash=$(cat $tmpmeta/input.hash)
 
-tmpfinished=tmpfinished/$toolname/$inputhash
+tmpfinished=${tmpprefix}tmpfinished/$toolname/$inputhash
 
 if [ -d $tmpfinished ]; then
     echo "reusing $tmpfinished, since it already exists."

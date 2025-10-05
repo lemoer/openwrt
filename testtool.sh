@@ -4,8 +4,8 @@ toolname=$1
 
 set -e
 
-tmpcurrent=tmpcurrent
-tmpmetabasic=tmpmetabasic
+tmpcurrent=${tmpprefix}tmpcurrent
+tmpmetabasic=${tmpprefix}tmpmetabasic
 tmpenv=$(mktemp -d)
 tmpmeta=$tmpenv.meta
 
@@ -24,8 +24,8 @@ copyit() {
 
 add_dependency() {
     #echo "$toolname: Adding dependency $1"
-    cat tmpcurrent/$1/.meta/output.hashes 2>/dev/null >> $prefile || {
-        echo "$toolname: Dependency $1 not found in tmpcurrent! Did you forget to build it first?"
+    cat $tmpcurrent/$1/.meta/output.hashes 2>/dev/null >> $prefile || {
+        echo "$toolname: Dependency $tmpcurrent/$1 not found! Did you forget to build it first?"
         exit 1
     }
 }
@@ -42,7 +42,7 @@ sort -u -k 2 $prefile -o $prefile
 ## try to use cached package
 
 inputhashpre=$(cat $prefile | md5sum - | awk '{print $1}')
-tmpfinished=tmpfinished/$toolname/$inputhashpre
+tmpfinished=${tmpprefix}tmpfinished/$toolname/$inputhashpre
 
 if [ -d $tmpfinished ]; then
     echo "reusing $tmpfinished, since it already exists."
@@ -78,8 +78,8 @@ diff -q $tmpmeta/input.hashes.pre $tmpmeta/input.hashes || {
     exit 1
 }
 
-tmpfinished=tmpfinished/$toolname/$inputhash
-tmpbuild=tmpbuild/$toolname/$inputhash
+tmpfinished=${tmpprefix}tmpfinished/$toolname/$inputhash
+tmpbuild=${tmpprefix}tmpbuild/$toolname/$inputhash
 
 mkdir -p $tmpbuild/host/bin # some packages seem to require this
 
@@ -135,7 +135,7 @@ cmp -s $tmpmeta/staging_dir_before.hash $tmpmeta/staging_dir_after.hash || {
 # To be atomic and make sure a build has really finished, we first build to $tmpbuild
 # and then move it to $tmpfinished.
 mkdir -p $(dirname $tmpfinished)
-ln -s ../../$tmpbuild/ $tmpfinished
+ln -s ../../tmpbuild/$toolname/$inputhash $tmpfinished
 
 # Generate output hashes
 find $tmpfinished/ -type f -exec md5sum {} + | sed "s| $tmpfinished/| staging_dir/|" | sort -k 2 > $tmpmeta/output.hashes
@@ -148,7 +148,7 @@ mkdir -p $tmpfinished/.meta
 cp $tmpmeta/input.hashes $tmpfinished/.meta/
 cp $tmpmeta/output.hashes $tmpfinished/.meta/
 
-ln -s ../$tmpfinished/ $tmpcurrent/$toolname
+ln -s ../tmpfinished/$toolname/$inputhash $tmpcurrent/$toolname
 
 find $tmpfinished
 

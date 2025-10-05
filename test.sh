@@ -2,15 +2,12 @@
 
 set -e
 
-tmpenv=tmpenv
-tmpmetabasic=tmpmetabasic
+tmpenv=${tmpprefix}tmpenv
+tmpmetabasic=${tmpprefix}tmpmetabasic
+tmpcurrent=${tmpprefix}tmpcurrent
 
-export tmpmetabasic=tmpmetabasic
 rm -rf $tmpmetabasic
 mkdir -p $tmpmetabasic
-
-export tmpcurrent=tmpcurrent
-rm -rf $tmpcurrent
 mkdir -p $tmpcurrent
 
 # some preparations
