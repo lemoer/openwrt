@@ -127,3 +127,4 @@ Executed in  380.71 millis    fish           external
     - Mention python based approach.
     - New build dependency ninja.
     - Mention how-to-setup.
+- scripts/config changes input hash on dirclean.
