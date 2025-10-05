@@ -19,11 +19,11 @@ PKG_RELEASE:=1
 include $(INCLUDE_DIR)/host-build.mk
 
 define Host/Install
-	$(CP) $(HOST_BUILD_DIR)/bin/sstrip $(STAGING_DIR_HOST)/bin/
+	$(CP) $(HOST_BUILD_DIR)/bin/sstrip $(HOST_BUILD_PREFIX)/bin/
 endef
 
 define Host/Clean
-	rm -f $(STAGING_DIR_HOST)/bin/sstrip
+	rm -f $(HOST_BUILD_PREFIX)/bin/sstrip
 endef
 
 $(eval $(call HostBuild))
