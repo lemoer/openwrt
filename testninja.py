@@ -116,12 +116,13 @@ tool(writer, 'quilt', depends_on=automake + basic_deps + ['findutils'])
 tool(writer, 'libressl', depends_on=automake + basic_deps + ['pkgconf'])
 tool(writer, 'mkimage', depends_on=automake + basic_deps + ['bison', 'libressl'])
 
-tool(writer, 'cmake', depends_on=basic_deps + ['libressl', 'ninja', 'expat', 'zstd', 'zlib'])
+tool(writer, 'cmake', depends_on=basic_deps + ['libressl', 'ninja', 'expat', 'xz', 'zstd', 'zlib'])
 tool(writer, 'firmware-utils', depends_on=cmake + basic_deps + ['zlib', 'libressl'])
 
-tool(writer, 'elfutils', depends_on=automake + basic_deps + ['libtool', 'bison', 'gnulib', 'zlib', 'zstd'])
+tool(writer, 'elfutils', depends_on=automake + basic_deps + ['libtool', 'bison', 'gnulib', 'zlib', 'zstd', 'pkgconf'])
+
 tool(writer, 'e2fsprogs', depends_on=automake + basic_deps + ['000-meta-prepare', 'gnulib', 'libtool', 'util-linux', 'pkgconf'])
-tool(writer, 'erofs-utils', depends_on=basic_deps + ['libtool', 'xz', 'lz4', 'util-linux'])
+tool(writer, 'erofs-utils', depends_on=automake + basic_deps + ['pkgconf', 'libtool', 'xz', 'lz4', 'util-linux'])
 
 tool(writer, 'cpio', depends_on=basic_deps)
 tool(writer, 'flock', depends_on=basic_deps)
@@ -167,8 +168,8 @@ if build_all_host_tools or build_lzo_tools:
     tool(writer, 'lzop', depends_on=cmake + basic_deps + ['liblzo'])
 
 if build_all_host_tools or build_toolchain:
-    tool(writer, 'mpfr', depends_on=automake + basic_deps + ['libtool', 'gmp'])
-    tool(writer, 'mpc', depends_on=basic_deps + ['libtool', 'gmp', 'mpfr'])
+    tool(writer, 'mpfr', depends_on=automake + basic_deps + ['gmp'])
+    tool(writer, 'mpc', depends_on=basic_deps + ['gmp', 'mpfr'])
 
 if build_all_host_tools or build_coreutils:
     tool(writer, 'coreutils', depends_on=automake + basic_deps + ['missing-macros', 'bison', 'gnulib'])
