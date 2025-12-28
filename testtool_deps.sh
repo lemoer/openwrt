@@ -81,6 +81,7 @@ case "$toolname" in
         ;;
     e2fsprogs)
         uses_automake
+        add_dependency 000-meta-prepare
         add_dependency gnulib
         add_dependency libtool
         add_dependency util-linux
@@ -112,6 +113,7 @@ case "$toolname" in
     findutils)
         uses_automake
         add_dependency bison
+        add_dependency 000-meta-prepare
         ;;
     firmware-utils)
         uses_cmake

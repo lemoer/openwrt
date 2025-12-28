@@ -55,7 +55,7 @@ writer.build(
 writer.build(
     'tmpcurrent/000-meta-prepare',
     rule='preparebuild',
-    inputs=['clean-current-dir']
+    inputs=['clean-current-dir', 'tmpcurrent/000-meta-prereq']
 )
 
 basic_deps = ['libdeflate']
@@ -92,7 +92,7 @@ tool(writer, 'patchelf', depends_on=automake + basic_deps + ['libtool'])
 
 tool(writer, 'bison', depends_on=automake + basic_deps + ['flex', 'missing-macros'])
 
-tool(writer, 'findutils', depends_on=automake + basic_deps + ['bison'])
+tool(writer, 'findutils', depends_on=automake + basic_deps + ['bison', '000-meta-prepare'])
 
 tool(writer, 'dosfstools', depends_on=automake + ['libdeflate'])
 tool(writer, 'padjffs2', depends_on=basic_deps + ['findutils'])
@@ -119,7 +119,7 @@ tool(writer, 'cmake', depends_on=basic_deps + ['libressl', 'ninja', 'expat', 'zs
 tool(writer, 'firmware-utils', depends_on=cmake + basic_deps + ['zlib', 'libressl'])
 
 tool(writer, 'elfutils', depends_on=automake + basic_deps + ['libtool', 'bison', 'gnulib', 'zlib', 'zstd'])
-tool(writer, 'e2fsprogs', depends_on=automake + basic_deps + ['gnulib', 'libtool', 'util-linux', 'pkgconf'])
+tool(writer, 'e2fsprogs', depends_on=automake + basic_deps + ['000-meta-prepare', 'gnulib', 'libtool', 'util-linux', 'pkgconf'])
 tool(writer, 'erofs-utils', depends_on=basic_deps + ['libtool', 'xz', 'lz4', 'util-linux'])
 
 tool(writer, 'cpio', depends_on=basic_deps)
