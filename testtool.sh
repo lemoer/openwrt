@@ -120,7 +120,7 @@ if [ "$isolate" -eq 1 ]; then
 fi
 
 
-env -i make -j 1 V=s HOST_OS=Linux PATH=$PATH:$tmpenv/staging_dir/host/bin HOST_BUILD_PREFIX=$(pwd)/$tmpbuild/host TOPDIR=$tmpenv -C tools/$toolname/ compile
+env -i make -j 1 V=s GNU_HOST_NAME=$(scripts/config.guess) HOST_OS=Linux PATH=$PATH:$tmpenv/staging_dir/host/bin HOST_BUILD_PREFIX=$(pwd)/$tmpbuild/host TOPDIR=$tmpenv -C tools/$toolname/ compile
 
 # Build hashes over $tmpenv/staging_dir again and check that
 # they are unchanged.
