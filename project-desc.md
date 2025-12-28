@@ -167,4 +167,3 @@ Questions:
 ## Next steps
 
 - Include test.sh in ninja.
-- Remove redundancy in dependency specification.
