@@ -29,21 +29,22 @@ writer = ninja_syntax.Writer(open("build.ninja", "w"))
 writer.rule("cleancurrent", command="rm -rf tmpcurrent; mkdir -p tmpcurrent")
 writer.rule('preparebuild', command='sh testprepare.sh')
 writer.rule('prereqbuild', command='sh testprereq.sh')
-writer.rule('toolbuild', command='sh testtool.sh $toolname')
+writer.rule('toolbuild', command='sh testtool.sh $toolname $dependencies')
 
 writer.build('FORCE', 'phony')
 
 writer.build('clean-current-dir', rule='cleancurrent', inputs=['FORCE'])
 
 def tool(writer, toolname, depends_on):
-    inputs = ['tmpcurrent/000-meta-prereq']
-    for dep in depends_on:
+    depends_on_all = depends_on + ['000-meta-prereq']
+    inputs = []
+    for dep in depends_on_all:
         inputs.append(f'tmpcurrent/{dep}')
     writer.build(
         f'tmpcurrent/{toolname}',
         rule='toolbuild',
         inputs=inputs,
-        variables={'toolname': toolname}
+        variables={'toolname': toolname, 'dependencies': ' '.join(depends_on_all)}
     )
 
 writer.build(

@@ -33,7 +33,11 @@ add_dependency() {
 prefile=$tmpmeta/input.hashes.pre
 cat $tmpmetabasic/basic.hashes > $prefile
 
-. ./testtool_deps.sh
+# loop through all arguments $2..$n as dependencies
+shift
+for dep in "$@"; do
+    add_dependency $dep
+done
 
 find tools/$toolname -type f -exec md5sum {} + | sort -k 2 >> $prefile
 
@@ -60,7 +64,9 @@ add_dependency() {
 
 # TODO: find out if CONFIG_... variables can leak in
 
-. ./testtool_deps.sh
+for dep in "$@"; do
+    add_dependency $dep
+done
 
 copyit include
 copyit rules.mk
