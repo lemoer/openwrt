@@ -4,15 +4,21 @@
 - This repository is a small proof-of-concept/experiment, which has the focus to build all `tools` using this approach.
 - The build inputs are be hashed such that each tool is stored in a path with it's hash, similar known from the nix-store.
 
-## Overview of Scripts
+## How to use:
 
-- `test.sh` - Build all tools.
+``` shell
+python testninja.py
+ninja -j 12
+```
+
+## Subscripts (which are called by ninja)
+
+- `newbuild/_basic_hashes.sh` - Generates some hashes of basic tools, which are used by almost all tools
 - `newbuild/prereq.sh` - Builds a meta tool called `000-meta-prereq`, which contains the prerequisite tools (symlinks of host system).
+- `newbuild/prepare.sh` - Creates a meta tool called `000-meta-prepare`, which contains some stuff done by the old makefile before any tool was built. 
 - `newbuild/tool.sh $toolname` - Build the tool with name `$toolname`.
-- ~~`testtool_deps.sh` - Contains the specification of dependencies.~~
-- `tmpcmpnoniso.sh $toolname` - A script that can be used to compare which files the standard OpenWrt build process adds for a tool to staging_dir vs. what we did.
 
-## How it Works
+## Data Formats
 
 The following folders and variables are used during the build:
 1. `tmpenv/`:
@@ -117,7 +123,6 @@ Executed in  380.71 millis    fish           external
 make dirclean tools/compile
 
 # Build with our approach
-sh newbuild/_basic_hashes.sh
 python3 testninja.py
 ninja -j 12
 
@@ -136,23 +141,14 @@ sh tmpdiffoscope.sh host/bin/tune2fs
 
 # Next-Steps/Ideas
 
-- Compare if the result is equivalent to building with the standard OpenWrt build process.
+- Compare if the result is equivalent to building with the standard OpenWrt build process. (WIP)
 - Maybe make the inputs more specific?
     - Import only certain files from `scripts` or `include` into the `tmpenv`.
-- Build something that checks if a tool has a proper cleanup.
 
 ## TODOs
 
 - Use a common download dir.
-- Recreate basic hash in python-style based approach.
-    - After this, delete test.sh.
-- Store tool dependencies only in one place.
-- Update project-desc.md:
-    - Mention python based approach.
-    - New build dependency ninja.
-    - Mention how-to-setup.
 - scripts/config changes input hash on dirclean.
-- Include generation of tmpmetabasic to ninja file.
 - Use other hashing mechanism than md5.
 - tmpcurrent/000-meta-prepare/host/include/sys/sysmacros.h influences binaries.
 
@@ -162,8 +158,4 @@ Questions:
 - How does it interfer with existing makefiles?
 - Packages & images are most interesting (first of all).
 - Framing: "Isolating Package Builds"
-
-
-## Next steps
-
-- rename scripts
+- Why did we chose ninja?
