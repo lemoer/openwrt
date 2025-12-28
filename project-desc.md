@@ -154,3 +154,11 @@ sh tmpdiffoscope.sh host/bin/tune2fs
 - scripts/config changes input hash on dirclean.
 - Include generation of tmpmetabasic to ninja file.
 - Use other hashing mechanism than md5.
+- tmpcurrent/000-meta-prepare/host/include/sys/sysmacros.h influences binaries.
+
+## Notes from Discussion with h
+
+Questions:
+- How does it interfer with existing makefiles?
+- Packages & images are most interesting (first of all).
+- Framing: "Isolating Package Builds"
