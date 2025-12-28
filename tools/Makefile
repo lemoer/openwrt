@@ -212,7 +212,7 @@ $(STAGING_DIR)/.prepared: $(TMP_DIR)/.build
 	mkdir -p $(BUILD_DIR)/stamp
 	touch $@
 
-$(STAGING_DIR_HOST)/.prepared: $(TMP_DIR)/.build
+$(STAGING_DIR_HOST)/.prepared: #$(TMP_DIR)/.build
 	$(call PrepareStaging,$(STAGING_DIR_HOST))
 	mkdir -p $(BUILD_DIR_HOST)/stamp $(STAGING_DIR_HOST)/include/sys
 	$(INSTALL_DATA) $(TOPDIR)/tools/include/*.h $(STAGING_DIR_HOST)/include/
