@@ -27,10 +27,10 @@ def parse_openwrt_config(path):
 writer = ninja_syntax.Writer(open("build.ninja", "w"))
 
 writer.rule("cleancurrent", command="rm -rf tmpcurrent; mkdir -p tmpcurrent; rm -rf tmpmetabasic; mkdir -p tmpmetabasic")
-writer.rule('preparebuild', command='sh testprepare.sh')
-writer.rule('prereqbuild', command='sh testprereq.sh')
-writer.rule('toolbuild', command='sh testtool.sh $toolname $dependencies')
-writer.rule('preparebasichashes', command='sh test.sh $out')
+writer.rule('preparebuild', command='sh newbuild/prepare.sh')
+writer.rule('prereqbuild', command='sh newbuild/prereq.sh')
+writer.rule('toolbuild', command='sh newbuild/tool.sh $toolname $dependencies')
+writer.rule('preparebasichashes', command='sh newbuild/_basic_hashes.sh $out')
 
 writer.build('FORCE', 'phony')
 

@@ -4,5 +4,5 @@ export tmpprefix=tmpreprod/
 
 mkdir -p $tmpprefix
 
-sh test.sh
+sh newbuild/_basic_hashes.sh
 ninja -j 1
