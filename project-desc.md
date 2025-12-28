@@ -166,4 +166,4 @@ Questions:
 
 ## Next steps
 
-- Include test.sh in ninja.
+- rename scripts
