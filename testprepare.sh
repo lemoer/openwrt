@@ -64,7 +64,7 @@ if [ -d $tmpfinished ]; then
 fi
 
 
-make V=s TOPDIR=$(pwd)/tmpenv $(pwd)/tmpenv/staging_dir/host/.prepared -C $(pwd)/tmpenv
+make V=s OPENWRT_BUILD=1 TOPDIR=$(pwd)/tmpenv $(pwd)/tmpenv/staging_dir/host/.prepared -C $(pwd)/tmpenv
 rm -fr $tmpenv/staging_dir/host/bin/* # little hack to avoid prereq tools in this tool
 
 mkdir -p $tmpfinished
