@@ -45,11 +45,12 @@ opkg = \
 
 apk = \
   IPKG_INSTROOT=$(1) \
-  $(FAKEROOT) $(STAGING_DIR_HOST)/bin/apk \
+  $(STAGING_DIR_HOST)/bin/apk \
 	--root $(1) \
 	--keys-dir $(if $(APK_KEYS),$(APK_KEYS),$(TOPDIR)) \
 	--no-logfile \
-	--preserve-env
+	--preserve-env \
+	--usermode
 
 TARGET_DIR_ORIG := $(TARGET_ROOTFS_DIR)/root.orig-$(BOARD)
 
